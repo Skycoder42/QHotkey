@@ -2,6 +2,7 @@
 #define HOTTESTWIDGET_H
 
 #include <QWidget>
+#include <QHotkey>
 
 namespace Ui {
 	class HotTestWidget;
@@ -15,8 +16,37 @@ public:
 	explicit HotTestWidget(QWidget *parent = 0);
 	~HotTestWidget();
 
+private slots:
+	void setShortcut_1(const QKeySequence &sequence);
+	void setShortcut_2(const QKeySequence &sequence);
+	void setShortcut_3(const QKeySequence &sequence);
+	void setShortcut_4(const QKeySequence &sequence);
+	void setShortcut_5(const QKeySequence &sequence);
+
+	void increase_1();
+	void increase_2();
+	void increase_3();
+	void increase_4();
+	void increase_5();
+
+	void on_resetButton_1_clicked();
+	void on_resetButton_2_clicked();
+	void on_resetButton_3_clicked();
+	void on_resetButton_4_clicked();
+	void on_resetButton_5_clicked();
+
+	void on_groupBox_toggled(bool checked);
+
 private:
 	Ui::HotTestWidget *ui;
+
+	QHotkey *hotkey_1;
+	QHotkey *hotkey_2;
+	QHotkey *hotkey_3;
+	QHotkey *hotkey_4;
+	QHotkey *hotkey_5;
+
+	QList<QHotkey*> testHotkeys;
 };
 
 #endif // HOTTESTWIDGET_H

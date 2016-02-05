@@ -10,8 +10,8 @@ class QHotkey : public QObject
 	Q_OBJECT
 	friend class QHotkeyPrivate;
 
-	Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled)
-	Q_PROPERTY(QKeySequence shortcut READ shortcut WRITE setShortcut RESET reset)
+	Q_PROPERTY(bool registered READ isRegistered WRITE setRegistered NOTIFY registeredChanged)
+	Q_PROPERTY(QKeySequence shortcut READ shortcut WRITE setShortcut RESET resetShortcut)
 
 public:
 	struct NativeShortcut {
@@ -28,33 +28,33 @@ public:
 	};
 
 	explicit QHotkey(QObject *parent = 0);
-	explicit QHotkey(const QKeySequence &shortcut, QObject *parent = 0);
+	explicit QHotkey(const QKeySequence &shortcut, bool autoRegister = true, QObject *parent = 0);
+	explicit QHotkey(Qt::Key key, Qt::KeyboardModifiers modifiers, bool autoRegister = true, QObject *parent = 0);
 	~QHotkey();
 
-	QKeySequence shortcut() const;
-	bool setShortcut(const QKeySequence& shortcut);
-	bool isEnabled() const;
 	bool isRegistered() const;
+	QKeySequence shortcut() const;
+	Qt::Key keyCode() const;
+	Qt::KeyboardModifiers modifiers() const;
+	NativeShortcut nativeShortcut() const;
 
 public slots:
-	void setEnabled(bool enabled = true);
-	inline void setDisabled(bool disabled = true) {
-		this->setEnabled(!disabled);
-	}
+	bool setRegistered(bool registered);
 
-	inline void reset() {
-		this->setShortcut(QKeySequence());
-	}
+	bool setShortcut(const QKeySequence& shortcut, bool autoRegister = true);
+	bool setShortcut(Qt::Key key, Qt::KeyboardModifiers modifiers, bool autoRegister = true);
+	bool resetShortcut();
 
 signals:
 	void activated();
 
+	void registeredChanged(bool registered);
+
 private:
-	bool enabled;
 	Qt::Key key;
 	Qt::KeyboardModifiers mods;
 
-	NativeShortcut nativeShortcut;
+	NativeShortcut nativeHkey;
 	bool registered;
 };
 
