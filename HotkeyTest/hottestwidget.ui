@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>520</width>
-    <height>425</height>
+    <height>426</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="playTab">
       <attribute name="title">
@@ -958,7 +958,8 @@
 &lt;ul&gt;
   &lt;li&gt;&lt;u&gt;Windows:&lt;/u&gt; Registering on multiple threads is possible, but: The thread that registered must unregister too and events will be send to the thread registered from, not the main thread.&lt;/li&gt;
   &lt;li&gt;&lt;u&gt;Mac:&lt;/u&gt; Works fine.&lt;/li&gt;
-&lt;/ul&gt;
+  &lt;li&gt;&lt;u&gt;Linux:&lt;/u&gt; Works fine.&lt;/li&gt;
+&lt;/ul&gt;&lt;br/&gt;
 &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="textFormat">

@@ -12,7 +12,7 @@ mac {
 	SOURCES += $$PWD/qhotkey_win.cpp
 	LIBS += -lUser32
 } else:unix {
-	SOURCES +=
+	SOURCES += $$PWD/qhotkey_x11.cpp
 	QT += x11extras
 	LIBS += -lX11
 }

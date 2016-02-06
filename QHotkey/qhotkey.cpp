@@ -3,10 +3,10 @@
 #include <QCoreApplication>
 #include <QAbstractEventDispatcher>
 #include <QMetaMethod>
+#include <QDebug>
 
 #define LOCKER QMutexLocker locker(&this->mutex)
 
-#include <QDebug>
 QHotkey::QHotkey(QObject *parent) :
 	QObject(parent),
 	key(Qt::Key_unknown),
@@ -96,7 +96,7 @@ bool QHotkey::setShortcut(Qt::Key key, Qt::KeyboardModifiers modifiers, bool aut
 		else
 			return true;
 	} else {
-		qWarning("QHotkey: Unable to map shortcut to native keys.");
+        qWarning() << "QHotkey: Unable to map shortcut to native keys. Key:" << key << "Modifiers:" << modifiers;
 		this->key = Qt::Key_unknown;
 		this->mods = Qt::NoModifier;
 		this->nativeShortcut = NativeShortcut();
