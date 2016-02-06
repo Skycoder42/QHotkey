@@ -8,6 +8,8 @@
 
 class QHotkeyPrivate : public QAbstractNativeEventFilter
 {
+	friend class QHotkeyPrivateNative;
+
 public:
 	QHotkeyPrivate();//singleton!!!
 	~QHotkeyPrivate();
@@ -45,6 +47,11 @@ uint qHash(QHotkey::NativeShortcut key, uint seed = 0);
 inline QHotkey::NativeShortcut::NativeShortcut() :
 	key(0),
 	mods(0)
+{}
+
+inline QHotkey::NativeShortcut::NativeShortcut(quint32 key, quint32 mods) :
+	key(key),
+	mods(mods)
 {}
 
 inline QHotkey::NativeShortcut::NativeShortcut(const QHotkey::NativeShortcut &other) :

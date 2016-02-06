@@ -6,7 +6,7 @@ HEADERS += $$PWD/qhotkey.h \
 SOURCES += $$PWD/qhotkey.cpp
 
 mac {
-	SOURCES +=
+	SOURCES += $$PWD/qhotkey_mac.cpp
 	LIBS += -framework Carbon
 } else:win32 {
 	SOURCES += $$PWD/qhotkey_win.cpp
