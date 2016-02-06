@@ -38,7 +38,7 @@ private slots:
 
 	void on_groupBox_toggled(bool checked);
 
-	void on_threadEnableCheckBox_clicked(bool checked);
+	void on_threadEnableCheckBox_clicked();
 
 private:
 	Ui::HotTestWidget *ui;

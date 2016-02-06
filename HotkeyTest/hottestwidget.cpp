@@ -184,22 +184,20 @@ void HotTestWidget::on_groupBox_toggled(bool checked)
 		hotkey->setRegistered(checked);
 }
 
-void HotTestWidget::on_threadEnableCheckBox_clicked(bool checked)
+void HotTestWidget::on_threadEnableCheckBox_clicked()
 {
+	this->ui->threadEnableCheckBox->setEnabled(false);
 	this->ui->hotkeyCheckbox_1->setChecked(false);
 	this->ui->hotkeyCheckbox_2->setChecked(false);
 	this->ui->hotkeyCheckbox_3->setChecked(false);
 	this->ui->hotkeyCheckbox_4->setChecked(false);
 	this->ui->hotkeyCheckbox_5->setChecked(false);
 
+	QApplication::processEvents();
+
 	Q_ASSERT(!this->hotkey_4->isRegistered());
 	Q_ASSERT(!this->hotkey_5->isRegistered());
 
-	if(checked) {
-		this->hotkey_4->moveToThread(this->thread4);
-		this->hotkey_5->moveToThread(this->thread5);
-	} else {
-		this->hotkey_4->moveToThread(this->thread());
-		this->hotkey_5->moveToThread(this->thread());
-	}
+	this->hotkey_4->moveToThread(this->thread4);
+	this->hotkey_5->moveToThread(this->thread5);
 }

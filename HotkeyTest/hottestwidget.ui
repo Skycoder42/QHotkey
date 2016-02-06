@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="playTab">
       <attribute name="title">
@@ -953,7 +953,13 @@
        <item>
         <widget class="QLabel" name="label_8">
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Results so far:&lt;/span&gt;&lt;/p&gt;&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Windows:&lt;/span&gt; Registering on multiple threads is possible, but: The thread that registered must unregister too and events will be send to the thread registered from, not the main thread&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;
+&lt;b&gt;Results so far:&lt;/b&gt;&lt;/br&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;u&gt;Windows:&lt;/u&gt; Registering on multiple threads is possible, but: The thread that registered must unregister too and events will be send to the thread registered from, not the main thread.&lt;/li&gt;
+  &lt;li&gt;&lt;u&gt;Mac:&lt;/u&gt; Works fine.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="textFormat">
           <enum>Qt::RichText</enum>
