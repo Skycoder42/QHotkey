@@ -10,7 +10,7 @@ The class works properly on all 3 OS, but still has some issues with multi-threa
 
 ## Features
  - Works on Windows, Mac and X11
- - Easy to use, can use QKeySequence for easy shortcut input
+ - Easy to use, can use `QKeySequence` for easy shortcut input
  - Supports almost all common keys
  - Allows direct input of Key/Modifier-Combinations
  - Supports multiple QHotkey-instances for the same shortcut
