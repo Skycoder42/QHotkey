@@ -4,7 +4,7 @@ A global shortcut/hotkey for Desktop Qt-Applications.
 The QHotkey is a class that can be used to create hotkeys/global shortcuts, aka shortcuts that work everywhere, independent of the application state. This means your application can be active, inactive, minimized or not visible at all and still receive the shortcuts.
 
 ## Status
-**Still in development!!!**
+**Still in development!!!** - Can already be used but is not ready yet.
 
 The class works properly on all 3 OS, but still has some issues with multi-threaded usage on windows. It works on mac/X11, but I need to investigate further, if the things I'm doing are safe. If you are just using the main thread, it will work fine.
 
@@ -32,5 +32,5 @@ Just copy the `./QHotkey` folder into you application and add the line `include(
  - C++11
 
 ### Known Limitations
- - Qt::Key makes no difference between normal numbers and the Numpad numbers. Windows however requires this. Thus, you can't register shortcuts for the numpad
- - Supports not all keys, but most of the common ones.
+ - Qt::Key makes no difference between normal numbers and the Numpad numbers. Most keyboards however requires this. Thus, you can't register shortcuts for the numpad
+ - Supports not all keys, but most of the common ones. There are differences between platforms. "Delete", for example, works on windows and mac, but not on X11
