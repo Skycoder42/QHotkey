@@ -7,11 +7,15 @@ HotTestWidget::HotTestWidget(QWidget *parent) :
 	hotkey_1(new QHotkey(this)),
 	hotkey_2(new QHotkey(this)),
 	hotkey_3(new QHotkey(this)),
-	hotkey_4(new QHotkey(this)),
-	hotkey_5(new QHotkey(this)),
+	hotkey_4(new QHotkey(NULL)),
+	hotkey_5(new QHotkey(NULL)),
+	thread4(new QThread(this)),
+	thread5(new QThread(this)),
 	testHotkeys()
 {
 	ui->setupUi(this);
+	this->thread4->start();
+	this->thread5->start();
 
 	//1
 	connect(this->ui->hotkeyCheckbox_1, &QCheckBox::toggled,
@@ -91,6 +95,11 @@ HotTestWidget::HotTestWidget(QWidget *parent) :
 
 HotTestWidget::~HotTestWidget()
 {
+	this->thread4->quit();
+	this->thread4->wait();
+	this->thread5->quit();
+	this->thread5->wait();
+
 	delete ui;
 }
 
@@ -173,4 +182,24 @@ void HotTestWidget::on_groupBox_toggled(bool checked)
 {
 	for(QHotkey *hotkey : this->testHotkeys)
 		hotkey->setRegistered(checked);
+}
+
+void HotTestWidget::on_threadEnableCheckBox_clicked(bool checked)
+{
+	this->ui->hotkeyCheckbox_1->setChecked(false);
+	this->ui->hotkeyCheckbox_2->setChecked(false);
+	this->ui->hotkeyCheckbox_3->setChecked(false);
+	this->ui->hotkeyCheckbox_4->setChecked(false);
+	this->ui->hotkeyCheckbox_5->setChecked(false);
+
+	Q_ASSERT(!this->hotkey_4->isRegistered());
+	Q_ASSERT(!this->hotkey_5->isRegistered());
+
+	if(checked) {
+		this->hotkey_4->moveToThread(this->thread4);
+		this->hotkey_5->moveToThread(this->thread5);
+	} else {
+		this->hotkey_4->moveToThread(this->thread());
+		this->hotkey_5->moveToThread(this->thread());
+	}
 }

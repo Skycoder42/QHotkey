@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QHotkey>
+#include <QThread>
 
 namespace Ui {
 	class HotTestWidget;
@@ -37,6 +38,8 @@ private slots:
 
 	void on_groupBox_toggled(bool checked);
 
+	void on_threadEnableCheckBox_clicked(bool checked);
+
 private:
 	Ui::HotTestWidget *ui;
 
@@ -45,6 +48,9 @@ private:
 	QHotkey *hotkey_3;
 	QHotkey *hotkey_4;
 	QHotkey *hotkey_5;
+
+	QThread *thread4;
+	QThread *thread5;
 
 	QList<QHotkey*> testHotkeys;
 };
