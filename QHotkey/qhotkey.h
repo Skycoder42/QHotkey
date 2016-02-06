@@ -14,29 +14,17 @@ class QHotkey : public QObject
 	Q_PROPERTY(QKeySequence shortcut READ shortcut WRITE setShortcut RESET resetShortcut)
 
 public:
-	struct NativeShortcut {
-		quint32 key;
-		quint32 mods;
-
-		NativeShortcut();
-		NativeShortcut(const NativeShortcut &other);
-
-		bool isValid() const;
-
-		NativeShortcut &operator =(const NativeShortcut &other);
-		bool operator==(const NativeShortcut &other) const;
-	};
-
 	explicit QHotkey(QObject *parent = 0);
 	explicit QHotkey(const QKeySequence &shortcut, bool autoRegister = true, QObject *parent = 0);
 	explicit QHotkey(Qt::Key key, Qt::KeyboardModifiers modifiers, bool autoRegister = true, QObject *parent = 0);
 	~QHotkey();
 
+	static bool isKeyCaptured(Qt::Key key, Qt::KeyboardModifiers modifiers);
+
 	bool isRegistered() const;
 	QKeySequence shortcut() const;
 	Qt::Key keyCode() const;
 	Qt::KeyboardModifiers modifiers() const;
-	NativeShortcut nativeShortcut() const;
 
 public slots:
 	bool setRegistered(bool registered);
@@ -51,13 +39,25 @@ signals:
 	void registeredChanged(bool registered);
 
 private:
+	struct NativeShortcut {
+		quint32 key;
+		quint32 mods;
+
+		inline NativeShortcut();
+		inline NativeShortcut(const NativeShortcut &other);
+
+		inline bool isValid() const;
+
+		inline NativeShortcut &operator =(const NativeShortcut &other);
+		inline bool operator==(const NativeShortcut &other) const;
+	};
+	friend uint qHash(QHotkey::NativeShortcut,uint);
+
 	Qt::Key key;
 	Qt::KeyboardModifiers mods;
 
-	NativeShortcut nativeHkey;
+	NativeShortcut nativeShortcut;
 	bool registered;
 };
-
-uint qHash(QHotkey::NativeShortcut key, uint seed = 0);
 
 #endif // QHOTKEY_H

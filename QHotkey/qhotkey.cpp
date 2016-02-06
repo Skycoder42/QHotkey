@@ -12,7 +12,7 @@ QHotkey::QHotkey(QObject *parent) :
 	QObject(parent),
 	key(Qt::Key_unknown),
 	mods(Qt::NoModifier),
-	nativeHkey(),
+	nativeShortcut(),
 	registered(false)
 {}
 
@@ -34,6 +34,11 @@ QHotkey::~QHotkey()
 		hotkeyPrivate->removeShortcut(this);
 }
 
+bool QHotkey::isKeyCaptured(Qt::Key key, Qt::KeyboardModifiers modifiers)
+{
+	return hotkeyPrivate->hasShortcut(key, modifiers);
+}
+
 QKeySequence QHotkey::shortcut() const
 {
 	if(this->key == Qt::Key_unknown)
@@ -50,11 +55,6 @@ Qt::Key QHotkey::keyCode() const
 Qt::KeyboardModifiers QHotkey::modifiers() const
 {
 	return this->mods;
-}
-
-QHotkey::NativeShortcut QHotkey::nativeShortcut() const
-{
-	return this->nativeHkey;
 }
 
 bool QHotkey::isRegistered() const
@@ -90,8 +90,8 @@ bool QHotkey::setShortcut(Qt::Key key, Qt::KeyboardModifiers modifiers, bool aut
 
 	this->key = key;
 	this->mods = modifiers;
-	this->nativeHkey = hotkeyPrivate->nativeShortcut(key, modifiers);
-	if(this->nativeHkey.isValid()) {
+	this->nativeShortcut = hotkeyPrivate->nativeShortcut(key, modifiers);
+	if(this->nativeShortcut.isValid()) {
 		if(autoRegister)
 			return hotkeyPrivate->addShortcut(this);
 		else
@@ -100,7 +100,7 @@ bool QHotkey::setShortcut(Qt::Key key, Qt::KeyboardModifiers modifiers, bool aut
 		qWarning("QHotkey: Unable to map shortcut to native keys.");
 		this->key = Qt::Key_unknown;
 		this->mods = Qt::NoModifier;
-		this->nativeHkey = NativeShortcut();
+		this->nativeShortcut = NativeShortcut();
 		return false;
 	}
 }
@@ -115,7 +115,7 @@ bool QHotkey::resetShortcut()
 
 	this->key = Qt::Key_unknown;
 	this->mods = Qt::NoModifier;
-	this->nativeHkey = NativeShortcut();
+	this->nativeShortcut = NativeShortcut();
 	return true;
 }
 
@@ -124,47 +124,12 @@ bool QHotkey::setRegistered(bool registered)
 	if(this->registered && !registered)
 		return hotkeyPrivate->removeShortcut(this);
 	else if(!this->registered && registered) {
-		if(!this->nativeHkey.isValid())
+		if(!this->nativeShortcut.isValid())
 			return false;
 		else
 			return hotkeyPrivate->addShortcut(this);
 	} else
 		return true;
-}
-
-
-// ---------- QHotkey::NativeShortcut implementation ----------
-
-QHotkey::NativeShortcut::NativeShortcut() :
-	key(0),
-	mods(0)
-{}
-
-QHotkey::NativeShortcut::NativeShortcut(const QHotkey::NativeShortcut &other) :
-	key(other.key),
-	mods(other.mods)
-{}
-
-QHotkey::NativeShortcut &QHotkey::NativeShortcut::operator =(const QHotkey::NativeShortcut &other)
-{
-	this->key = other.key;
-	this->mods = other.mods;
-	return (*this);
-}
-
-bool QHotkey::NativeShortcut::isValid() const
-{
-	return (this->key != 0);
-}
-
-bool QHotkey::NativeShortcut::operator==(const QHotkey::NativeShortcut &other) const
-{
-	return (this->key == other.key && this->mods == other.mods);
-}
-
-uint qHash(QHotkey::NativeShortcut key, uint seed)
-{
-	return qHash(key.key ^ key.mods, seed);
 }
 
 
@@ -190,6 +155,11 @@ QHotkeyPrivate::~QHotkeyPrivate()
 		qApp->eventDispatcher()->removeNativeEventFilter(this);
 }
 
+QHotkeyPrivate *QHotkeyPrivate::instance()
+{
+	return hotkeyPrivate;
+}
+
 QHotkey::NativeShortcut QHotkeyPrivate::nativeShortcut(Qt::Key keycode, Qt::KeyboardModifiers modifiers) {
 	QHotkey::NativeShortcut shortcut;
 	shortcut.key = nativeKeycode(keycode);
@@ -197,11 +167,16 @@ QHotkey::NativeShortcut QHotkeyPrivate::nativeShortcut(Qt::Key keycode, Qt::Keyb
 	return shortcut;
 }
 
+bool QHotkeyPrivate::hasShortcut(Qt::Key keycode, Qt::KeyboardModifiers modifiers)
+{
+	return this->shortcuts.contains(this->nativeShortcut(keycode, modifiers));
+}
+
 bool QHotkeyPrivate::addShortcut(QHotkey *hotkey)
 {
 	if(hotkey->registered)
 		return false;
-	QHotkey::NativeShortcut shortcut = hotkey->nativeHkey;
+	QHotkey::NativeShortcut shortcut = hotkey->nativeShortcut;
 
 	LOCKER;
 	if(!this->shortcuts.contains(shortcut)) {
@@ -219,7 +194,7 @@ bool QHotkeyPrivate::removeShortcut(QHotkey *hotkey)
 {
 	if(!hotkey->registered)
 		return false;
-	QHotkey::NativeShortcut shortcut = hotkey->nativeHkey;
+	QHotkey::NativeShortcut shortcut = hotkey->nativeShortcut;
 
 	LOCKER;
 	if(this->shortcuts.remove(shortcut, hotkey) == 0)

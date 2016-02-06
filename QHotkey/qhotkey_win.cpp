@@ -24,12 +24,12 @@ bool QHotkeyPrivate::nativeEventFilter(const QByteArray &eventType, void *messag
 quint32 QHotkeyPrivate::nativeKeycode(Qt::Key keycode)
 {
 	if(keycode <= 0xFFFF) {//Try to obtain the key from it's "character"
-		const SHORT vk = VkKeyScanW(keycode);
-		if(vk > -1)
-			return LOBYTE(vk);
+		const SHORT vKey = VkKeyScanW(keycode);
+		if(vKey > -1)
+			return LOBYTE(vKey);
 	}
 
-	//find key from "switch/case" --> Only finds a very small subset of keys
+	//find key from switch/case --> Only finds a very small subset of keys
 	switch (keycode)
 	{
 	case Qt::Key_Escape:
@@ -193,16 +193,16 @@ quint32 QHotkeyPrivate::nativeKeycode(Qt::Key keycode)
 
 quint32 QHotkeyPrivate::nativeModifiers(Qt::KeyboardModifiers modifiers)
 {
-	quint32 native = 0;
+	quint32 nMods = 0;
 	if (modifiers & Qt::ShiftModifier)
-		native |= MOD_SHIFT;
+		nMods |= MOD_SHIFT;
 	if (modifiers & Qt::ControlModifier)
-		native |= MOD_CONTROL;
+		nMods |= MOD_CONTROL;
 	if (modifiers & Qt::AltModifier)
-		native |= MOD_ALT;
+		nMods |= MOD_ALT;
 	if (modifiers & Qt::MetaModifier)
-		native |= MOD_WIN;
-	return native;
+		nMods |= MOD_WIN;
+	return nMods;
 }
 
 bool QHotkeyPrivate::registerShortcut(QHotkey::NativeShortcut shortcut)
