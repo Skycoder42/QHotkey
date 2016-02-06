@@ -5,80 +5,53 @@
 #include <QAbstractNativeEventFilter>
 #include <QMultiHash>
 #include <QMutex>
+#include <QGlobalStatic>
 
 class QHotkeyPrivate : public QAbstractNativeEventFilter
 {
-	friend class QHotkeyPrivateNative;
-
 public:
 	QHotkeyPrivate();//singleton!!!
 	~QHotkeyPrivate();
 
 	static QHotkeyPrivate *instance();
+	static inline bool testValid(QHotkey::NativeShortcut nativeShortcut);
 
-	// QAbstractNativeEventFilter interface
-	bool nativeEventFilter(const QByteArray &eventType, void *message, long *result) Q_DECL_OVERRIDE;
+	inline QHotkey::NativeShortcut nativeShortcut(Qt::Key keycode, Qt::KeyboardModifiers modifiers);
 
-	QHotkey::NativeShortcut nativeShortcut(Qt::Key keycode, Qt::KeyboardModifiers modifiers);
 	bool hasShortcut(Qt::Key keycode, Qt::KeyboardModifiers modifiers);
 
 	bool addShortcut(QHotkey *hotkey);
 	bool removeShortcut(QHotkey *hotkey);
 
+protected:
+	void activateShortcut(QHotkey::NativeShortcut shortcut);
+
+	virtual quint32 nativeKeycode(Qt::Key keycode) = 0;//platform implement
+	virtual quint32 nativeModifiers(Qt::KeyboardModifiers modifiers) = 0;//platform implement
+
+	virtual bool registerShortcut(QHotkey::NativeShortcut shortcut) = 0;//platform implement
+	virtual bool unregisterShortcut(QHotkey::NativeShortcut shortcut) = 0;//platform implement
+
 private:
 	QMutex mutex;
 	QMultiHash<QHotkey::NativeShortcut, QHotkey*> shortcuts;
-
-	void activateShortcut(QHotkey::NativeShortcut shortcut);
-
-	quint32 nativeKeycode(Qt::Key keycode);//platform implement
-	quint32 nativeModifiers(Qt::KeyboardModifiers modifiers);//platform implement
-
-	bool registerShortcut(QHotkey::NativeShortcut shortcut);//platform implement
-	bool unregisterShortcut(QHotkey::NativeShortcut shortcut);//platform implement
 };
 
-uint qHash(QHotkey::NativeShortcut key, uint seed = 0);
+#define NATIVE_INSTANCE(ClassName) \
+	Q_GLOBAL_STATIC(ClassName, hotkeyPrivate) \
+	\
+	QHotkeyPrivate *QHotkeyPrivate::instance()\
+	{\
+		return hotkeyPrivate;\
+	}
 
-
-
-// ---------- QHotkey::NativeShortcut implementation ----------
-
-inline QHotkey::NativeShortcut::NativeShortcut() :
-	key(0),
-	mods(0)
-{}
-
-inline QHotkey::NativeShortcut::NativeShortcut(quint32 key, quint32 mods) :
-	key(key),
-	mods(mods)
-{}
-
-inline QHotkey::NativeShortcut::NativeShortcut(const QHotkey::NativeShortcut &other) :
-	key(other.key),
-	mods(other.mods)
-{}
-
-inline QHotkey::NativeShortcut &QHotkey::NativeShortcut::operator =(const QHotkey::NativeShortcut &other)
+inline bool QHotkeyPrivate::testValid(QHotkey::NativeShortcut nativeShortcut)
 {
-	this->key = other.key;
-	this->mods = other.mods;
-	return (*this);
+	return (nativeShortcut.first != 0);
 }
 
-inline bool QHotkey::NativeShortcut::isValid() const
-{
-	return (this->key != 0);
-}
-
-inline bool QHotkey::NativeShortcut::operator==(const QHotkey::NativeShortcut &other) const
-{
-	return (this->key == other.key && this->mods == other.mods);
-}
-
-inline uint qHash(QHotkey::NativeShortcut key, uint seed)
-{
-	return qHash(key.key ^ key.mods, seed);
+inline QHotkey::NativeShortcut QHotkeyPrivate::nativeShortcut(Qt::Key keycode, Qt::KeyboardModifiers modifiers) {
+	return {this->nativeKeycode(keycode), this->nativeModifiers(modifiers)};
 }
 
 #endif // QHOTKEY_P_H

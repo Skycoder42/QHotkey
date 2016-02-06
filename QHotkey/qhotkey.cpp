@@ -1,13 +1,12 @@
 #include "qhotkey.h"
 #include "qhotkey_p.h"
-#include <QGlobalStatic>
 #include <QCoreApplication>
 #include <QAbstractEventDispatcher>
 #include <QMetaMethod>
 
-Q_GLOBAL_STATIC(QHotkeyPrivate, hotkeyPrivate)
 #define LOCKER QMutexLocker locker(&this->mutex)
 
+#include <QDebug>
 QHotkey::QHotkey(QObject *parent) :
 	QObject(parent),
 	key(Qt::Key_unknown),
@@ -31,12 +30,12 @@ QHotkey::QHotkey(Qt::Key key, Qt::KeyboardModifiers modifiers, bool autoRegister
 QHotkey::~QHotkey()
 {
 	if(this->registered)
-		hotkeyPrivate->removeShortcut(this);
+		QHotkeyPrivate::instance()->removeShortcut(this);
 }
 
 bool QHotkey::isKeyCaptured(Qt::Key key, Qt::KeyboardModifiers modifiers)
 {
-	return hotkeyPrivate->hasShortcut(key, modifiers);
+	return QHotkeyPrivate::instance()->hasShortcut(key, modifiers);
 }
 
 QKeySequence QHotkey::shortcut() const
@@ -80,7 +79,7 @@ bool QHotkey::setShortcut(Qt::Key key, Qt::KeyboardModifiers modifiers, bool aut
 {
 	if(this->registered) {
 		if(autoRegister) {
-			if(!hotkeyPrivate->removeShortcut(this))
+			if(!QHotkeyPrivate::instance()->removeShortcut(this))
 				return false;
 		} else {
 			qWarning("QHotkey: Can't change the shortcut while the hotkey is registered");
@@ -90,10 +89,10 @@ bool QHotkey::setShortcut(Qt::Key key, Qt::KeyboardModifiers modifiers, bool aut
 
 	this->key = key;
 	this->mods = modifiers;
-	this->nativeShortcut = hotkeyPrivate->nativeShortcut(key, modifiers);
-	if(this->nativeShortcut.isValid()) {
+	this->nativeShortcut = QHotkeyPrivate::instance()->nativeShortcut(key, modifiers);
+	if(QHotkeyPrivate::testValid(this->nativeShortcut)) {
 		if(autoRegister)
-			return hotkeyPrivate->addShortcut(this);
+			return QHotkeyPrivate::instance()->addShortcut(this);
 		else
 			return true;
 	} else {
@@ -108,7 +107,7 @@ bool QHotkey::setShortcut(Qt::Key key, Qt::KeyboardModifiers modifiers, bool aut
 bool QHotkey::resetShortcut()
 {
 	if(this->registered &&
-	   !hotkeyPrivate->removeShortcut(this)) {
+	   !QHotkeyPrivate::instance()->removeShortcut(this)) {
 		qWarning("QHotkey: Failed to unregister shortcut");
 		return false;
 	}
@@ -122,12 +121,12 @@ bool QHotkey::resetShortcut()
 bool QHotkey::setRegistered(bool registered)
 {
 	if(this->registered && !registered)
-		return hotkeyPrivate->removeShortcut(this);
+		return QHotkeyPrivate::instance()->removeShortcut(this);
 	else if(!this->registered && registered) {
-		if(!this->nativeShortcut.isValid())
+		if(!QHotkeyPrivate::testValid(this->nativeShortcut))
 			return false;
 		else
-			return hotkeyPrivate->addShortcut(this);
+			return QHotkeyPrivate::instance()->addShortcut(this);
 	} else
 		return true;
 }
@@ -146,25 +145,10 @@ QHotkeyPrivate::QHotkeyPrivate() :
 
 QHotkeyPrivate::~QHotkeyPrivate()
 {
-	if(!this->shortcuts.isEmpty()) {
+	if(!this->shortcuts.isEmpty())
 		qWarning("QHotkey: QHotkeyPrivate destroyed with registered shortcuts!");
-		for(QHotkey::NativeShortcut shortcut : this->shortcuts.keys())
-			this->unregisterShortcut(shortcut);
-	}
 	if(qApp && qApp->eventDispatcher())
 		qApp->eventDispatcher()->removeNativeEventFilter(this);
-}
-
-QHotkeyPrivate *QHotkeyPrivate::instance()
-{
-	return hotkeyPrivate;
-}
-
-QHotkey::NativeShortcut QHotkeyPrivate::nativeShortcut(Qt::Key keycode, Qt::KeyboardModifiers modifiers) {
-	QHotkey::NativeShortcut shortcut;
-	shortcut.key = nativeKeycode(keycode);
-	shortcut.mods = nativeModifiers(modifiers);
-	return shortcut;
 }
 
 bool QHotkeyPrivate::hasShortcut(Qt::Key keycode, Qt::KeyboardModifiers modifiers)

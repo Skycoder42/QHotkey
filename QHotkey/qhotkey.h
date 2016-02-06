@@ -9,12 +9,13 @@ class QHotkey : public QObject
 {
 	Q_OBJECT
 	friend class QHotkeyPrivate;
-	friend class QHotkeyPrivateNative;
 
 	Q_PROPERTY(bool registered READ isRegistered WRITE setRegistered NOTIFY registeredChanged)
 	Q_PROPERTY(QKeySequence shortcut READ shortcut WRITE setShortcut RESET resetShortcut)
 
 public:
+	typedef QPair<quint32, quint32> NativeShortcut;
+
 	explicit QHotkey(QObject *parent = 0);
 	explicit QHotkey(const QKeySequence &shortcut, bool autoRegister = true, QObject *parent = 0);
 	explicit QHotkey(Qt::Key key, Qt::KeyboardModifiers modifiers, bool autoRegister = true, QObject *parent = 0);
@@ -40,22 +41,6 @@ signals:
 	void registeredChanged(bool registered);
 
 private:
-	struct NativeShortcut {
-		quint32 key;
-		quint32 mods;
-
-		inline NativeShortcut();
-		inline NativeShortcut(quint32 key, quint32 mods);
-		inline NativeShortcut(const NativeShortcut &other);
-
-		inline bool isValid() const;
-
-		inline NativeShortcut &operator =(const NativeShortcut &other);
-		inline bool operator==(const NativeShortcut &other) const;
-	};
-
-	friend uint qHash(QHotkey::NativeShortcut,uint);
-
 	Qt::Key key;
 	Qt::KeyboardModifiers mods;
 

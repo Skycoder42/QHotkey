@@ -3,25 +3,39 @@
 #include <qt_windows.h>
 #include <QDebug>
 
-static QString formatWinError(DWORD winError);
+#define HKEY_ID(nativeShortcut) (((nativeShortcut.first ^ (nativeShortcut.second << 8)) & 0x0FFF) | 0x7000)
 
-bool QHotkeyPrivate::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
+class QHotkeyPrivateWin : public QHotkeyPrivate
+{
+public:
+	// QAbstractNativeEventFilter interface
+	bool nativeEventFilter(const QByteArray &eventType, void *message, long *result) Q_DECL_OVERRIDE;
+
+protected:
+	// QHotkeyPrivate interface
+	quint32 nativeKeycode(Qt::Key keycode) Q_DECL_OVERRIDE;
+	quint32 nativeModifiers(Qt::KeyboardModifiers modifiers) Q_DECL_OVERRIDE;
+	bool registerShortcut(QHotkey::NativeShortcut shortcut) Q_DECL_OVERRIDE;
+	bool unregisterShortcut(QHotkey::NativeShortcut shortcut) Q_DECL_OVERRIDE;
+
+private:
+	static QString formatWinError(DWORD winError);
+};
+NATIVE_INSTANCE(QHotkeyPrivateWin)
+
+bool QHotkeyPrivateWin::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
 {
 	Q_UNUSED(eventType);
 	Q_UNUSED(result);
 
 	MSG* msg = static_cast<MSG*>(message);
-	if(msg->message == WM_HOTKEY) {
-		QHotkey::NativeShortcut shortcut;
-		shortcut.key = HIWORD(msg->lParam);
-		shortcut.mods = LOWORD(msg->lParam);
-		this->activateShortcut(shortcut);
-	}
+	if(msg->message == WM_HOTKEY)
+		this->activateShortcut({HIWORD(msg->lParam), LOWORD(msg->lParam)});
 
 	return false;
 }
 
-quint32 QHotkeyPrivate::nativeKeycode(Qt::Key keycode)
+quint32 QHotkeyPrivateWin::nativeKeycode(Qt::Key keycode)
 {
 	if(keycode <= 0xFFFF) {//Try to obtain the key from it's "character"
 		const SHORT vKey = VkKeyScanW(keycode);
@@ -191,7 +205,7 @@ quint32 QHotkeyPrivate::nativeKeycode(Qt::Key keycode)
 	}
 }
 
-quint32 QHotkeyPrivate::nativeModifiers(Qt::KeyboardModifiers modifiers)
+quint32 QHotkeyPrivateWin::nativeModifiers(Qt::KeyboardModifiers modifiers)
 {
 	quint32 nMods = 0;
 	if (modifiers & Qt::ShiftModifier)
@@ -205,12 +219,12 @@ quint32 QHotkeyPrivate::nativeModifiers(Qt::KeyboardModifiers modifiers)
 	return nMods;
 }
 
-bool QHotkeyPrivate::registerShortcut(QHotkey::NativeShortcut shortcut)
+bool QHotkeyPrivateWin::registerShortcut(QHotkey::NativeShortcut shortcut)
 {
 	BOOL ok = RegisterHotKey(NULL,
-							 shortcut.key ^ shortcut.mods,
-							 shortcut.mods,
-							 shortcut.key);
+							 HKEY_ID(shortcut),
+							 shortcut.second,
+							 shortcut.first);
 	if(ok)
 		return true;
 	else {
@@ -219,9 +233,9 @@ bool QHotkeyPrivate::registerShortcut(QHotkey::NativeShortcut shortcut)
 	}
 }
 
-bool QHotkeyPrivate::unregisterShortcut(QHotkey::NativeShortcut shortcut)
+bool QHotkeyPrivateWin::unregisterShortcut(QHotkey::NativeShortcut shortcut)
 {
-	BOOL ok = UnregisterHotKey(NULL, shortcut.key ^ shortcut.mods);
+	BOOL ok = UnregisterHotKey(NULL, HKEY_ID(shortcut));
 	if(ok)
 		return true;
 	else {
@@ -230,7 +244,7 @@ bool QHotkeyPrivate::unregisterShortcut(QHotkey::NativeShortcut shortcut)
 	}
 }
 
-static QString formatWinError(DWORD winError)
+QString QHotkeyPrivateWin::formatWinError(DWORD winError)
 {
 	wchar_t *buffer = NULL;
 	DWORD num = FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,

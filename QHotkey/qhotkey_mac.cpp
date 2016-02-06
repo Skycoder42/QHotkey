@@ -9,11 +9,11 @@ public:
 	static OSStatus hotkeyEventHandler(EventHandlerCallRef nextHandler, EventRef event, void* data);
 
 	static bool isHotkeyHandlerRegistered;
-	static QHash<QHotkey::NativeShortcut, EventHotKeyRef> hotkeyRefs;
+	static QHash<NativeShortcut, EventHotKeyRef> hotkeyRefs;
 };
 
 bool QHotkeyPrivateNative::isHotkeyHandlerRegistered = false;
-QHash<QHotkey::NativeShortcut, EventHotKeyRef> QHotkeyPrivateNative::hotkeyRefs;
+QHash<NativeShortcut, EventHotKeyRef> QHotkeyPrivateNative::hotkeyRefs;
 
 bool QHotkeyPrivate::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
 {
@@ -174,7 +174,7 @@ quint32 QHotkeyPrivate::nativeModifiers(Qt::KeyboardModifiers modifiers)
 	return nMods;
 }
 
-bool QHotkeyPrivate::registerShortcut(QHotkey::NativeShortcut shortcut)
+bool QHotkeyPrivate::registerShortcut(NativeShortcut shortcut)
 {
 	if (!QHotkeyPrivateNative::isHotkeyHandlerRegistered)
 	{
@@ -204,7 +204,7 @@ bool QHotkeyPrivate::registerShortcut(QHotkey::NativeShortcut shortcut)
 	}
 }
 
-bool QHotkeyPrivate::unregisterShortcut(QHotkey::NativeShortcut shortcut)
+bool QHotkeyPrivate::unregisterShortcut(NativeShortcut shortcut)
 {
 	EventHotKeyRef eventRef = QHotkeyPrivateNative::hotkeyRefs.value(shortcut);
 	OSStatus status = UnregisterEventHotKey(eventRef);
