@@ -140,7 +140,6 @@ quint32 QHotkeyPrivateMac::nativeKeycode(Qt::Key keycode)
 	UCKeyboardTypeHeader* table = header->keyboardTypeList;
 
 	uint8_t *data = (uint8_t*)header;
-	// God, would a little documentation for this shit kill you...
 	for (quint32 i=0; i < header->keyboardTypeCount; i++) {
 		UCKeyStateRecordsIndex* stateRec = 0;
 		if (table[i].keyStateRecordsIndexOffset != 0) {
