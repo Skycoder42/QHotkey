@@ -927,7 +927,7 @@
        <item>
         <widget class="QLabel" name="label_7">
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use this test to determine whether shortcuts on multiple threads are supported or not. Internally, the backend of the QHotkey class is &lt;span style=&quot; font-weight:600;&quot;&gt;threadsafe&lt;/span&gt;, and thus QHotkey is reentrant and can be used on any thread. However, some operating systems might not support creating hotkeys from different threads. &lt;/p&gt;&lt;p&gt;To enable threading, check the box below and return to the playground. &lt;span style=&quot; font-style:italic;&quot;&gt;Hotkey 4 and 5&lt;/span&gt; will now each run on their own thread. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This test was designed to try out multi-threaded shortcuts. The QHotkey class is completly &lt;span style=&quot; font-weight:600;&quot;&gt;threadsafe&lt;/span&gt;, but this test can help to see if it acutally works (It does).&lt;/p&gt;&lt;p&gt;If activated, &lt;span style=&quot; font-style:italic;&quot;&gt;Hotkey 4 and Hotkey 5 &lt;/span&gt;of the Playground will each run on their own thread. This means:&lt;/p&gt;&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Mainthread:&lt;/span&gt; Hotkey 1, 2, 3&lt;/li&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Second thread:&lt;/span&gt; Hotkey 4&lt;/li&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Third thread:&lt;/span&gt; Hotkey 5&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Note:&lt;/span&gt; The two hotkeys will be moved to the threads. For simplicity-reasons, you can't move them back in this test (But its possible, just not done here). Restart the test to get them back.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="textFormat">
           <enum>Qt::RichText</enum>
@@ -947,26 +947,6 @@
          </property>
          <property name="text">
           <string>Enable Threaded Hotkeys</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_8">
-         <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;
-&lt;b&gt;Results so far:&lt;/b&gt;&lt;/br&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;u&gt;Windows:&lt;/u&gt; Registering on multiple threads is possible, but: The thread that registered must unregister too and events will be send to the thread registered from, not the main thread.&lt;/li&gt;
-  &lt;li&gt;&lt;u&gt;Mac:&lt;/u&gt; Works fine.&lt;/li&gt;
-  &lt;li&gt;&lt;u&gt;Linux:&lt;/u&gt; Works fine.&lt;/li&gt;
-&lt;/ul&gt;&lt;br/&gt;
-&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="textFormat">
-          <enum>Qt::RichText</enum>
-         </property>
-         <property name="wordWrap">
-          <bool>true</bool>
          </property>
         </widget>
        </item>

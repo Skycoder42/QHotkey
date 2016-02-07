@@ -7,8 +7,10 @@
 #include <QMutex>
 #include <QGlobalStatic>
 
-class QHotkeyPrivate : public QAbstractNativeEventFilter
+class QHotkeyPrivate : public QObject, public QAbstractNativeEventFilter
 {
+	Q_OBJECT
+
 public:
 	QHotkeyPrivate();//singleton!!!
 	~QHotkeyPrivate();
@@ -16,7 +18,7 @@ public:
 	static QHotkeyPrivate *instance();
 	static inline bool testValid(QHotkey::NativeShortcut nativeShortcut);
 
-	inline QHotkey::NativeShortcut nativeShortcut(Qt::Key keycode, Qt::KeyboardModifiers modifiers);
+	QHotkey::NativeShortcut nativeShortcut(Qt::Key keycode, Qt::KeyboardModifiers modifiers);
 
 	bool hasShortcut(Qt::Key keycode, Qt::KeyboardModifiers modifiers);
 
@@ -32,8 +34,12 @@ protected:
 	virtual bool registerShortcut(QHotkey::NativeShortcut shortcut) = 0;//platform implement
 	virtual bool unregisterShortcut(QHotkey::NativeShortcut shortcut) = 0;//platform implement
 
+private:/*functions*/
+	Q_INVOKABLE bool addShortcutInvoked(QHotkey *hotkey);
+	Q_INVOKABLE bool removeShortcutInvoked(QHotkey *hotkey);
+	Q_INVOKABLE inline QHotkey::NativeShortcut nativeShortcutInvoked(Qt::Key keycode, Qt::KeyboardModifiers modifiers);
+
 private:
-	QMutex mutex;
 	QMultiHash<QHotkey::NativeShortcut, QHotkey*> shortcuts;
 };
 
@@ -50,7 +56,7 @@ inline bool QHotkeyPrivate::testValid(QHotkey::NativeShortcut nativeShortcut)
 	return (nativeShortcut.first != 0);
 }
 
-inline QHotkey::NativeShortcut QHotkeyPrivate::nativeShortcut(Qt::Key keycode, Qt::KeyboardModifiers modifiers) {
+inline QHotkey::NativeShortcut QHotkeyPrivate::nativeShortcutInvoked(Qt::Key keycode, Qt::KeyboardModifiers modifiers) {
 	return {this->nativeKeycode(keycode), this->nativeModifiers(modifiers)};
 }
 

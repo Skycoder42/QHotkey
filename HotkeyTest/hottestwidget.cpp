@@ -200,4 +200,10 @@ void HotTestWidget::on_threadEnableCheckBox_clicked()
 
 	this->hotkey_4->moveToThread(this->thread4);
 	this->hotkey_5->moveToThread(this->thread5);
+
+	QApplication::processEvents();
+	Q_ASSERT(this->hotkey_4->thread() == this->thread4);
+	Q_ASSERT(this->hotkey_5->thread() == this->thread5);
+
+	this->ui->tabWidget->setCurrentIndex(0);
 }

@@ -3,9 +3,8 @@
 #include <QCoreApplication>
 #include <QAbstractEventDispatcher>
 #include <QMetaMethod>
+#include <QThread>
 #include <QDebug>
-
-#define LOCKER QMutexLocker locker(&this->mutex)
 
 QHotkey::QHotkey(QObject *parent) :
 	QObject(parent),
@@ -136,7 +135,6 @@ bool QHotkey::setRegistered(bool registered)
 // ---------- QHotkeyPrivate implementation ----------
 
 QHotkeyPrivate::QHotkeyPrivate() :
-	mutex(QMutex::NonRecursive),
 	shortcuts()
 {
 	Q_ASSERT_X(qApp, Q_FUNC_INFO, "QHotkey requires QCoreApplication to be instantiated");
@@ -151,6 +149,21 @@ QHotkeyPrivate::~QHotkeyPrivate()
 		qApp->eventDispatcher()->removeNativeEventFilter(this);
 }
 
+QHotkey::NativeShortcut QHotkeyPrivate::nativeShortcut(Qt::Key keycode, Qt::KeyboardModifiers modifiers)
+{
+	Qt::ConnectionType conType = (QThread::currentThread() == this->thread() ?
+									  Qt::DirectConnection :
+									  Qt::BlockingQueuedConnection);
+	QHotkey::NativeShortcut res;
+	if(!QMetaObject::invokeMethod(this, "nativeShortcutInvoked", conType,
+								  Q_RETURN_ARG(QHotkey::NativeShortcut, res),
+								  Q_ARG(Qt::Key, keycode),
+								  Q_ARG(Qt::KeyboardModifiers, modifiers))) {
+		return QHotkey::NativeShortcut();
+	} else
+		return res;
+}
+
 bool QHotkeyPrivate::hasShortcut(Qt::Key keycode, Qt::KeyboardModifiers modifiers)
 {
 	return this->shortcuts.contains(this->nativeShortcut(keycode, modifiers));
@@ -160,9 +173,53 @@ bool QHotkeyPrivate::addShortcut(QHotkey *hotkey)
 {
 	if(hotkey->registered)
 		return false;
+
+	Qt::ConnectionType conType = (QThread::currentThread() == this->thread() ?
+									  Qt::DirectConnection :
+									  Qt::BlockingQueuedConnection);
+	bool res = false;
+	if(!QMetaObject::invokeMethod(this, "addShortcutInvoked", conType,
+								  Q_RETURN_ARG(bool, res),
+								  Q_ARG(QHotkey*, hotkey))) {
+		return false;
+	} else {
+		if(res)
+			emit hotkey->registeredChanged(true);
+		return res;
+	}
+}
+
+bool QHotkeyPrivate::removeShortcut(QHotkey *hotkey)
+{
+	if(!hotkey->registered)
+		return false;
+
+	Qt::ConnectionType conType = (QThread::currentThread() == this->thread() ?
+									  Qt::DirectConnection :
+									  Qt::BlockingQueuedConnection);
+	bool res = false;
+	if(!QMetaObject::invokeMethod(this, "removeShortcutInvoked", conType,
+								  Q_RETURN_ARG(bool, res),
+								  Q_ARG(QHotkey*, hotkey))) {
+		return false;
+	} else {
+		if(res)
+			emit hotkey->registeredChanged(false);
+		return res;
+	}
+}
+
+void QHotkeyPrivate::activateShortcut(QHotkey::NativeShortcut shortcut)
+{
+	QMetaMethod signal = QMetaMethod::fromSignal(&QHotkey::activated);
+	for(QHotkey *hkey : this->shortcuts.values(shortcut))
+		signal.invoke(hkey, Qt::QueuedConnection);
+}
+
+bool QHotkeyPrivate::addShortcutInvoked(QHotkey *hotkey)
+{
 	QHotkey::NativeShortcut shortcut = hotkey->nativeShortcut;
 
-	LOCKER;
 	if(!this->shortcuts.contains(shortcut)) {
 		if(!this->registerShortcut(shortcut))
 			return false;
@@ -170,17 +227,13 @@ bool QHotkeyPrivate::addShortcut(QHotkey *hotkey)
 
 	this->shortcuts.insert(shortcut, hotkey);
 	hotkey->registered = true;
-	emit hotkey->registeredChanged(true);
 	return true;
 }
 
-bool QHotkeyPrivate::removeShortcut(QHotkey *hotkey)
+bool QHotkeyPrivate::removeShortcutInvoked(QHotkey *hotkey)
 {
-	if(!hotkey->registered)
-		return false;
 	QHotkey::NativeShortcut shortcut = hotkey->nativeShortcut;
 
-	LOCKER;
 	if(this->shortcuts.remove(shortcut, hotkey) == 0)
 		return false;
 	hotkey->registered = false;
@@ -189,13 +242,4 @@ bool QHotkeyPrivate::removeShortcut(QHotkey *hotkey)
 		return this->unregisterShortcut(shortcut);
 	else
 		return true;
-}
-
-void QHotkeyPrivate::activateShortcut(QHotkey::NativeShortcut shortcut)
-{
-	LOCKER;
-
-	QMetaMethod signal = QMetaMethod::fromSignal(&QHotkey::activated);
-	for(QHotkey *hkey : this->shortcuts.values(shortcut))
-		signal.invoke(hkey, Qt::QueuedConnection);
 }
