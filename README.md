@@ -49,9 +49,9 @@ By running the example in `./HotkeyTest` you can test out the QHotkey class. The
  - **Threading:** Activate the checkbox to move 2 Hotkeys of the playground to seperate threads. It should work without a difference.
 
 ## Thread saftey
-The QHotkey class itself is reentrant - wich means you can create as many instances as required on any thread. This allows you to use the QHotkey on all threads. **But** you should never use the QHotkey instance on a thread that is different from the one the instance belongs to! Internally the system uses a singleton instance that handles the hotkey events and distibutes them to the QHotkey instances. This internal class is completly threadsafe.
+The QHotkey class itself is reentrant - wich means you can create as many instances as required on any thread. This allows you to use the QHotkey on all threads. **But** you should never use the QHotkey instance on a thread that is different from the one the instance belongs to! Internally the system uses a singleton instance that handles the hotkey events and distributes them to the QHotkey instances. This internal class is completley threadsafe.
 
-However, this singleton instance only runs on the mainthread. (One reason is that some of the OS-Functions are not threadsafe). To make threaded hotkeys possible, the critical functions (registering/unregistering hotkeys and keytranslation) are all run on the mainthread too. The QHotkey instances on other threads use `QMetaObject::invokeMethod` with a `Qt::BlockingQueuedConnection`.
+However, this singleton instance only runs on the main thread. (One reason is that some of the OS-Functions are not thread safe). To make threaded hotkeys possible, the critical functions (registering/unregistering hotkeys and keytranslation) are all run on the mainthread too. The QHotkey instances on other threads use `QMetaObject::invokeMethod` with a `Qt::BlockingQueuedConnection`.
 
 For you this means: QHotkey instances on other threads than the main thread may take a little longer to register/unregister/translate hotkeys, because they have to wait for the main thread to do this for them.
 
@@ -62,6 +62,6 @@ For you this means: QHotkey instances on other threads than the main thread may 
  - C++11
 
 ### Known Limitations
- - Qt::Key makes no difference between normal numbers and the Numpad numbers. Most keyboards however requires this. Thus, you can't register shortcuts for the numpad.
- - Supports not all keys, but most of the common ones. There are differences between platforms and it depends on the Keyboard-Layout. "Delete", for example, works on windows and mac, but not on X11 (At least on my test machines). I tried to use OS-Functions where as possible, but since the Qt::Key values need to be converted into native keys, there are some limitations.
- - The registered keys will be "taken" by QHotkey. This means after a hotkey was cosumend by your application, it will not be send to the active application. This is done this way by the operating systems and cannot be changed.
+ - Qt::Key makes no difference between normal numbers and the Numpad numbers. Most keyboards however require this. Thus, you can't register shortcuts for the numpad.
+ - Supports not all keys, but most of the common ones. There are differences between platforms and it depends on the Keyboard-Layout. "Delete", for example, works on windows and mac, but not on X11 (At least on my test machines). I tried to use OS-Functions where possible, but since the Qt::Key values need to be converted into native keys, there are some limitations.
+ - The registered keys will be "taken" by QHotkey. This means after a hotkey was cosumend by your application, it will not be sent to the active application. This is done this way by the operating systems and cannot be changed.
