@@ -37,10 +37,7 @@ private slots:
 	void on_resetButton_5_clicked();
 
 	void on_groupBox_toggled(bool checked);
-
 	void on_threadEnableCheckBox_clicked();
-
-	void on_loggingCheckBox_clicked(bool checked);
 
 private:
 	Ui::HotTestWidget *ui;

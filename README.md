@@ -51,7 +51,7 @@ By running the example in `./HotkeyTest` you can test out the QHotkey class. The
 ### Logging
 By default, QHotkey prints some warning messages if something goes wrong (For example, a key that cannot be translated). All messages of QHotkey are grouped into the [`QLoggingCategory`](https://doc.qt.io/qt-5/qloggingcategory.html) "[QHotkey]". If you want to simply disable the logging, call the folling function somewhere in your code:
 ```cpp
-QLoggingCategory::setFilterRules(QStringLiteral("[QHotkey].warning=false"));
+QLoggingCategory::setFilterRules(QStringLiteral("QHotkey.warning=false"));
 ```
 This will turn all warnings of QHotkey of (It only uses warnings for now, thats why this is enough). For more information about all the things you can do with the logging categories, check the Qt-Documentation
 

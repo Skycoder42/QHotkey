@@ -6,7 +6,7 @@
 #include <QThread>
 #include <QDebug>
 
-Q_LOGGING_CATEGORY(logQHotkey, "[QHotkey]")
+Q_LOGGING_CATEGORY(logQHotkey, "QHotkey")
 
 QHotkey::QHotkey(QObject *parent) :
 	QObject(parent),
