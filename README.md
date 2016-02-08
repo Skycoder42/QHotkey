@@ -49,7 +49,7 @@ By running the example in `./HotkeyTest` you can test out the QHotkey class. The
  - **Threading:** Activate the checkbox to move 2 Hotkeys of the playground to seperate threads. It should work without a difference.
 
 ### Logging
-By default, QHotkey prints some warning messages if something goes wrong (For example, a key that cannot be translated). All messages of QHotkey are grouped into the [`QLoggingCategory`](https://doc.qt.io/qt-5/qloggingcategory.html) "[QHotkey]". If you want to simply disable the logging, call the folling function somewhere in your code:
+By default, QHotkey prints some warning messages if something goes wrong (For example, a key that cannot be translated). All messages of QHotkey are grouped into the [QLoggingCategory](https://doc.qt.io/qt-5/qloggingcategory.html) `"QHotkey"`. If you want to simply disable the logging, call the folling function somewhere in your code:
 ```cpp
 QLoggingCategory::setFilterRules(QStringLiteral("QHotkey.warning=false"));
 ```
