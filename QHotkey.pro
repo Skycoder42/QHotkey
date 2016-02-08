@@ -4,4 +4,6 @@ SUBDIRS += \
 	HotkeyTest
 
 DISTFILES += README.md \
-	LICENSE
+	LICENSE \
+	doc/qhotkey.doxy \
+	doc/qhotkey.dox
