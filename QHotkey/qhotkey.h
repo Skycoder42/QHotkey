@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QKeySequence>
 #include <QPair>
+#include <QLoggingCategory>
 
 class QHotkey : public QObject
 {
@@ -47,5 +48,7 @@ private:
 	NativeShortcut nativeShortcut;
 	bool registered;
 };
+
+Q_DECLARE_LOGGING_CATEGORY(logQHotkey)
 
 #endif // QHOTKEY_H

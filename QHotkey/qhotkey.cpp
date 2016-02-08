@@ -6,6 +6,8 @@
 #include <QThread>
 #include <QDebug>
 
+Q_LOGGING_CATEGORY(logQHotkey, "[QHotkey]")
+
 QHotkey::QHotkey(QObject *parent) :
 	QObject(parent),
 	key(Qt::Key_unknown),
@@ -65,8 +67,8 @@ bool QHotkey::setShortcut(const QKeySequence &shortcut, bool autoRegister)
 	if(shortcut.isEmpty()) {
 		return this->resetShortcut();
 	} else if(shortcut.count() > 1) {
-		qWarning("QHotkey: Keysequences with multiple shortcuts are not allowed! "
-				 "Only the first shortcut will be used!");
+		qCWarning(logQHotkey, "Keysequences with multiple shortcuts are not allowed! "
+							  "Only the first shortcut will be used!");
 	}
 
 	return this->setShortcut(Qt::Key(shortcut[0] & ~Qt::KeyboardModifierMask),
@@ -80,10 +82,8 @@ bool QHotkey::setShortcut(Qt::Key key, Qt::KeyboardModifiers modifiers, bool aut
 		if(autoRegister) {
 			if(!QHotkeyPrivate::instance()->removeShortcut(this))
 				return false;
-		} else {
-			qWarning("QHotkey: Can't change the shortcut while the hotkey is registered");
+		} else
 			return false;
-		}
 	}
 
 	this->key = key;
@@ -95,7 +95,7 @@ bool QHotkey::setShortcut(Qt::Key key, Qt::KeyboardModifiers modifiers, bool aut
 		else
 			return true;
 	} else {
-        qWarning() << "QHotkey: Unable to map shortcut to native keys. Key:" << key << "Modifiers:" << modifiers;
+		qCWarning(logQHotkey) << "Unable to map shortcut to native keys. Key:" << key << "Modifiers:" << modifiers;
 		this->key = Qt::Key_unknown;
 		this->mods = Qt::NoModifier;
 		this->nativeShortcut = NativeShortcut();
@@ -107,7 +107,6 @@ bool QHotkey::resetShortcut()
 {
 	if(this->registered &&
 	   !QHotkeyPrivate::instance()->removeShortcut(this)) {
-		qWarning("QHotkey: Failed to unregister shortcut");
 		return false;
 	}
 
@@ -144,7 +143,7 @@ QHotkeyPrivate::QHotkeyPrivate() :
 QHotkeyPrivate::~QHotkeyPrivate()
 {
 	if(!this->shortcuts.isEmpty())
-		qWarning("QHotkey: QHotkeyPrivate destroyed with registered shortcuts!");
+		qCWarning(logQHotkey, "QHotkeyPrivate destroyed with registered shortcuts!");
 	if(qApp && qApp->eventDispatcher())
 		qApp->eventDispatcher()->removeNativeEventFilter(this);
 }

@@ -40,6 +40,8 @@ private slots:
 
 	void on_threadEnableCheckBox_clicked();
 
+	void on_loggingCheckBox_clicked(bool checked);
+
 private:
 	Ui::HotTestWidget *ui;
 

@@ -30,8 +30,8 @@ private:
         HotkeyErrorHandler();
         ~HotkeyErrorHandler();
 
-        static bool hasError;//TODO threading
-        static QString errorString;//TODO threading
+		static bool hasError;
+		static QString errorString;
 
     private:
         XErrorHandler prevHandler;
@@ -108,7 +108,8 @@ bool QHotkeyPrivateX11::registerShortcut(QHotkey::NativeShortcut shortcut)
     }
 
     if(errorHandler.hasError) {
-        qWarning() << "QHotkey: Failed to register hotkey. Error:" << qPrintable(errorHandler.errorString);
+		qCWarning(logQHotkey) << "[QHotkey]   Failed to register hotkey. Error:"
+							  << qPrintable(errorHandler.errorString);
         this->unregisterShortcut(shortcut);
         return false;
     } else
@@ -129,8 +130,9 @@ bool QHotkeyPrivateX11::unregisterShortcut(QHotkey::NativeShortcut shortcut)
                    DefaultRootWindow(display));
     }
 
-    if(errorHandler.hasError) {
-        qWarning() << "QHotkey: Failed to unregister hotkey. Error:" << qPrintable(errorHandler.errorString);
+	if(errorHandler.hasError) {
+		qCWarning(logQHotkey) << "Failed to unregister hotkey. Error:"
+							  << qPrintable(errorHandler.errorString);
         this->unregisterShortcut(shortcut);
         return false;
     } else

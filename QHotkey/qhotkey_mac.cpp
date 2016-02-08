@@ -206,8 +206,9 @@ bool QHotkeyPrivateMac::registerShortcut(QHotkey::NativeShortcut shortcut)
 										  GetApplicationEventTarget(),
 										  0,
 										  &eventRef);
-    if (status != noErr) {
-        qWarning() << "QHotkey: Failed to register hotkey. Error:" << status;
+	if (status != noErr) {
+		qCWarning(logQHotkey) << "Failed to register hotkey. Error:"
+							  << status;
 		return false;
 	} else {
 		this->hotkeyRefs.insert(shortcut, eventRef);
@@ -219,8 +220,9 @@ bool QHotkeyPrivateMac::unregisterShortcut(QHotkey::NativeShortcut shortcut)
 {
 	EventHotKeyRef eventRef = QHotkeyPrivateMac::hotkeyRefs.value(shortcut);
 	OSStatus status = UnregisterEventHotKey(eventRef);
-    if (status != noErr) {
-        qWarning() << "QHotkey: Failed to unregister hotkey. Error:" << status;
+	if (status != noErr) {
+		qCWarning(logQHotkey) << "Failed to unregister hotkey. Error:"
+							  << status;
 		return false;
 	} else {
 		this->hotkeyRefs.remove(shortcut);
