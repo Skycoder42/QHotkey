@@ -34,11 +34,6 @@ QHotkey::~QHotkey()
 		QHotkeyPrivate::instance()->removeShortcut(this);
 }
 
-bool QHotkey::isKeyCaptured(Qt::Key key, Qt::KeyboardModifiers modifiers)
-{
-	return QHotkeyPrivate::instance()->hasShortcut(key, modifiers);
-}
-
 QKeySequence QHotkey::shortcut() const
 {
 	if(this->key == Qt::Key_unknown)
@@ -84,6 +79,13 @@ bool QHotkey::setShortcut(Qt::Key key, Qt::KeyboardModifiers modifiers, bool aut
 				return false;
 		} else
 			return false;
+	}
+
+	if(key == Qt::Key_unknown) {
+		this->key = Qt::Key_unknown;
+		this->mods = Qt::NoModifier;
+		this->nativeShortcut = NativeShortcut();
+		return true;
 	}
 
 	this->key = key;
@@ -161,11 +163,6 @@ QHotkey::NativeShortcut QHotkeyPrivate::nativeShortcut(Qt::Key keycode, Qt::Keyb
 		return QHotkey::NativeShortcut();
 	} else
 		return res;
-}
-
-bool QHotkeyPrivate::hasShortcut(Qt::Key keycode, Qt::KeyboardModifiers modifiers)
-{
-	return this->shortcuts.contains(this->nativeShortcut(keycode, modifiers));
 }
 
 bool QHotkeyPrivate::addShortcut(QHotkey *hotkey)

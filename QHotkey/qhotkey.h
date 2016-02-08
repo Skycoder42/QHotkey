@@ -24,22 +24,19 @@ public:
 	//! Constructor
 	explicit QHotkey(QObject *parent = 0);
 	//! Constructs a hotkey with a shortcut and optionally registers it
-	explicit QHotkey(const QKeySequence &shortcut, bool autoRegister = true, QObject *parent = 0);
+	explicit QHotkey(const QKeySequence &shortcut, bool autoRegister = false, QObject *parent = 0);
 	//! Constructs a hotkey with a key and modifiers and optionally registers it
-	explicit QHotkey(Qt::Key key, Qt::KeyboardModifiers modifiers, bool autoRegister = true, QObject *parent = 0);
+	explicit QHotkey(Qt::Key key, Qt::KeyboardModifiers modifiers, bool autoRegister = false, QObject *parent = 0);
 	//! Destructor
 	~QHotkey();
 
-	//! Test if a certain key with modifiers is currently registered somewhere or not
-	static bool isKeyCaptured(Qt::Key key, Qt::KeyboardModifiers modifiers);
-
 	//! READ-Accessor for QHotkey::registered
 	bool isRegistered() const;
-	//! READ-Accessor for QHotkey::shortcut
+	//! READ-Accessor for QHotkey::shortcut - the key and modifiers as a QKeySequence
 	QKeySequence shortcut() const;
-	//! The key-code of the current shortcut
+	//! READ-Accessor for QHotkey::shortcut - the key only
 	Qt::Key keyCode() const;
-	//! The modifiers of the current shortcut
+	//! READ-Accessor for QHotkey::shortcut - the modifiers only
 	Qt::KeyboardModifiers modifiers() const;
 
 public slots:
@@ -47,15 +44,15 @@ public slots:
 	bool setRegistered(bool registered);
 
 	//! WRITE-Accessor for QHotkey::shortcut
-	bool setShortcut(const QKeySequence& shortcut, bool autoRegister = true);
+	bool setShortcut(const QKeySequence &shortcut, bool autoRegister = false);
 	//! WRITE-Accessor for QHotkey::shortcut
-	bool setShortcut(Qt::Key key, Qt::KeyboardModifiers modifiers, bool autoRegister = true);
+	bool setShortcut(Qt::Key key, Qt::KeyboardModifiers modifiers, bool autoRegister = false);
 	//! RESET-Accessor for QHotkey::shortcut
 	bool resetShortcut();
 
 signals:
 	//! Will be emitted if the shortcut is pressed
-	void activated();
+	void activated(QPrivateSignal);
 
 	//! NOTIFY-Accessor for QHotkey::registered
 	void registeredChanged(bool registered);

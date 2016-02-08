@@ -20,8 +20,6 @@ public:
 
 	QHotkey::NativeShortcut nativeShortcut(Qt::Key keycode, Qt::KeyboardModifiers modifiers);
 
-	bool hasShortcut(Qt::Key keycode, Qt::KeyboardModifiers modifiers);
-
 	bool addShortcut(QHotkey *hotkey);
 	bool removeShortcut(QHotkey *hotkey);
 

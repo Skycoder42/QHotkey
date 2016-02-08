@@ -60,7 +60,7 @@ The QHotkey class itself is reentrant - wich means you can create as many instan
 
 However, this singleton instance only runs on the main thread. (One reason is that some of the OS-Functions are not thread safe). To make threaded hotkeys possible, the critical functions (registering/unregistering hotkeys and keytranslation) are all run on the mainthread too. The QHotkey instances on other threads use `QMetaObject::invokeMethod` with a `Qt::BlockingQueuedConnection`.
 
-For you this means: QHotkey instances on other threads than the main thread may take a little longer to register/unregister/translate hotkeys, because they have to wait for the main thread to do this for them. **Important:** there is however, one additional limitation that comes with that feature: QHotkey instances on other threads but the main thread *must* be unregistered or destroyed *before* the main eventloop ends. Otherwise, your application will hangup on destruction of the hotkey. This limitation does not apply for instances on the main thread.
+For you this means: QHotkey instances on other threads than the main thread may take a little longer to register/unregister/translate hotkeys, because they have to wait for the main thread to do this for them. **Important:** there is however, one additional limitation that comes with that feature: QHotkey instances on other threads but the main thread *must* be unregistered or destroyed *before* the main eventloop ends. Otherwise, your application will hangup on destruction of the hotkey. This limitation does not apply for instances on the main thread. Furthermore, the same happens if you change the shortcut or register/unregister before the loop started, until it actually starts.
 
 ## Technical
 ### Requirements
@@ -69,6 +69,7 @@ For you this means: QHotkey instances on other threads than the main thread may 
  - C++11
 
 ### Known Limitations
+ - Only single key/modifier combinations are possible. If using QKeySequence, only the first key+modifier of the sequence will be used.
  - Qt::Key makes no difference between normal numbers and the Numpad numbers. Most keyboards however require this. Thus, you can't register shortcuts for the numpad.
  - Supports not all keys, but most of the common ones. There are differences between platforms and it depends on the Keyboard-Layout. "Delete", for example, works on windows and mac, but not on X11 (At least on my test machines). I tried to use OS-Functions where possible, but since the Qt::Key values need to be converted into native keys, there are some limitations.
  - The registered keys will be "taken" by QHotkey. This means after a hotkey was cosumend by your application, it will not be sent to the active application. This is done this way by the operating systems and cannot be changed.
