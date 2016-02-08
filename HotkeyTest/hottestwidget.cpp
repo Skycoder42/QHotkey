@@ -7,8 +7,8 @@ HotTestWidget::HotTestWidget(QWidget *parent) :
 	hotkey_1(new QHotkey(this)),
 	hotkey_2(new QHotkey(this)),
 	hotkey_3(new QHotkey(this)),
-	hotkey_4(new QHotkey(this)),
-	hotkey_5(new QHotkey(this)),
+	hotkey_4(new QHotkey(NULL)),
+	hotkey_5(new QHotkey(NULL)),
 	thread4(new QThread(this)),
 	thread5(new QThread(this)),
 	testHotkeys()
@@ -99,6 +99,9 @@ HotTestWidget::~HotTestWidget()
 	this->thread4->wait();
 	this->thread5->quit();
 	this->thread5->wait();
+
+	delete this->hotkey_4;
+	delete this->hotkey_5;
 
 	delete ui;
 }
@@ -198,19 +201,19 @@ void HotTestWidget::on_threadEnableCheckBox_clicked()
 	Q_ASSERT(!this->hotkey_4->isRegistered());
 	Q_ASSERT(!this->hotkey_5->isRegistered());
 
-	this->hotkey_4->setParent(NULL);
 	this->hotkey_4->moveToThread(this->thread4);
-	this->hotkey_5->setParent(NULL);
 	this->hotkey_5->moveToThread(this->thread5);
 
 	QApplication::processEvents();
 	Q_ASSERT(this->hotkey_4->thread() == this->thread4);
 	Q_ASSERT(this->hotkey_5->thread() == this->thread5);
 
-	connect(this->thread4, &QThread::finished,
-			this->hotkey_4, &QHotkey::deleteLater);
-	connect(this->thread5, &QThread::finished,
-			this->hotkey_5, &QHotkey::deleteLater);
+	connect(this->thread4, &QThread::finished, this, [this](){
+		this->hotkey_4->moveToThread(qApp->thread());
+	});
+	connect(this->thread5, &QThread::finished, this, [this](){
+		this->hotkey_5->moveToThread(qApp->thread());
+	});
 
 	this->ui->tabWidget->setCurrentIndex(0);
 }

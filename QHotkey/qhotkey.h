@@ -6,12 +6,15 @@
 #include <QPair>
 #include <QLoggingCategory>
 
+//! A class to define global, systemwide Hotkeys
 class QHotkey : public QObject
 {
 	Q_OBJECT
 	friend class QHotkeyPrivate;
 
+	//! Specifies whether this hotkey is currently registered or not
 	Q_PROPERTY(bool registered READ isRegistered WRITE setRegistered NOTIFY registeredChanged)
+	//! Holds the shortcut this hotkey will be triggered on
 	Q_PROPERTY(QKeySequence shortcut READ shortcut WRITE setShortcut RESET resetShortcut)
 
 public:
