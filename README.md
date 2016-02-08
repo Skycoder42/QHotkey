@@ -3,9 +3,6 @@ A global shortcut/hotkey for Desktop Qt-Applications.
 
 The QHotkey is a class that can be used to create hotkeys/global shortcuts, aka shortcuts that work everywhere, independent of the application state. This means your application can be active, inactive, minimized or not visible at all and still receive the shortcuts.
 
-## Status
-**Still in development!!!** - But almost done. There are only some small details and documentation left. It's ready to be used.
-
 ## Features
  - Works on Windows, Mac and X11
  - Easy to use, can use `QKeySequence` for easy shortcut input
@@ -61,6 +58,11 @@ The QHotkey class itself is reentrant - wich means you can create as many instan
 However, this singleton instance only runs on the main thread. (One reason is that some of the OS-Functions are not thread safe). To make threaded hotkeys possible, the critical functions (registering/unregistering hotkeys and keytranslation) are all run on the mainthread too. The QHotkey instances on other threads use `QMetaObject::invokeMethod` with a `Qt::BlockingQueuedConnection`.
 
 For you this means: QHotkey instances on other threads than the main thread may take a little longer to register/unregister/translate hotkeys, because they have to wait for the main thread to do this for them. **Important:** there is however, one additional limitation that comes with that feature: QHotkey instances on other threads but the main thread *must* be unregistered or destroyed *before* the main eventloop ends. Otherwise, your application will hangup on destruction of the hotkey. This limitation does not apply for instances on the main thread. Furthermore, the same happens if you change the shortcut or register/unregister before the loop started, until it actually starts.
+
+## Documentation
+The documentation is available within the releases and on [github pages](https://skycoder42.github.io/QHotkey/).
+
+The documentation was created using [doxygen](http://www.doxygen.org). It includes an HTML-documentation and Qt-Help files that can be included into QtCreator (QtAssistant) to show F1-Help (See [Adding External Documentation](https://doc.qt.io/qtcreator/creator-help.html#adding-external-documentation) for more details).
 
 ## Technical
 ### Requirements
