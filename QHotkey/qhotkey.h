@@ -22,11 +22,11 @@ public:
 	typedef QPair<quint32, quint32> NativeShortcut;
 
 	//! Constructor
-	explicit QHotkey(QObject *parent = 0);
+	explicit QHotkey(QObject *parent = Q_NULLPTR);
 	//! Constructs a hotkey with a shortcut and optionally registers it
-	explicit QHotkey(const QKeySequence &shortcut, bool autoRegister = false, QObject *parent = 0);
+	explicit QHotkey(const QKeySequence &shortcut, bool autoRegister = false, QObject *parent = Q_NULLPTR);
 	//! Constructs a hotkey with a key and modifiers and optionally registers it
-	explicit QHotkey(Qt::Key key, Qt::KeyboardModifiers modifiers, bool autoRegister = false, QObject *parent = 0);
+	explicit QHotkey(Qt::Key key, Qt::KeyboardModifiers modifiers, bool autoRegister = false, QObject *parent = Q_NULLPTR);
 	//! Destructor
 	~QHotkey();
 
