@@ -11,7 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = HotkeyTest
 TEMPLATE = app
 
-include(../QHotkey/qhotkey.pri)
+include(../qhotkey.pri)
 
 SOURCES += main.cpp\
         hottestwidget.cpp
