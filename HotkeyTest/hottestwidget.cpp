@@ -11,6 +11,7 @@ HotTestWidget::HotTestWidget(QWidget *parent) :
 	hotkey_5(new QHotkey(NULL)),
 	thread4(new QThread(this)),
 	thread5(new QThread(this)),
+	nativeHotkey(new QHotkey(this)),
 	testHotkeys()
 {
 	ui->setupUi(this);
@@ -91,6 +92,10 @@ HotTestWidget::HotTestWidget(QWidget *parent) :
 	this->testHotkeys += new QHotkey(Qt::Key_K, Qt::ShiftModifier | Qt::AltModifier, false, this);
 	connect(this->testHotkeys.last(), &QHotkey::activated,
 			this->ui->hotkeyShiftAltKCheckBox_2, &QCheckBox::toggle);
+
+	//native
+	connect(this->nativeHotkey, &QHotkey::activated,
+			this, &HotTestWidget::increase_native);
 }
 
 HotTestWidget::~HotTestWidget()
@@ -216,4 +221,20 @@ void HotTestWidget::on_threadEnableCheckBox_clicked()
 	});
 
 	this->ui->tabWidget->setCurrentIndex(0);
+}
+
+void HotTestWidget::on_registeredCheckBox_toggled(bool checked)
+{
+	if(checked) {
+		this->nativeHotkey->setNativeShortcut({
+												  (quint32)this->ui->nativeKeySpinBox->value(),
+												  (quint32)this->ui->nativeModifiersSpinBox->value()
+											  }, true);
+	} else
+		this->nativeHotkey->setRegistered(false);
+}
+
+void HotTestWidget::increase_native()
+{
+	this->ui->nativeCount->display(this->ui->nativeCount->intValue() + 1);
 }

@@ -39,6 +39,9 @@ private slots:
 	void on_groupBox_toggled(bool checked);
 	void on_threadEnableCheckBox_clicked();
 
+	void on_registeredCheckBox_toggled(bool checked);
+	void increase_native();
+
 private:
 	Ui::HotTestWidget *ui;
 
@@ -52,6 +55,8 @@ private:
 	QThread *thread5;
 
 	QList<QHotkey*> testHotkeys;
+
+	QHotkey *nativeHotkey;
 };
 
 #endif // HOTTESTWIDGET_H

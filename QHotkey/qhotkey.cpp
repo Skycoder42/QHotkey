@@ -28,6 +28,12 @@ QHotkey::QHotkey(Qt::Key key, Qt::KeyboardModifiers modifiers, bool autoRegister
 	this->setShortcut(key, modifiers, autoRegister);
 }
 
+QHotkey::QHotkey(const QHotkey::NativeShortcut &shortcut, bool autoRegister, QObject *parent) :
+	QHotkey(parent)
+{
+	this->setNativeShortcut(shortcut, autoRegister);
+}
+
 QHotkey::~QHotkey()
 {
 	if(this->registered)
@@ -50,6 +56,11 @@ Qt::Key QHotkey::keyCode() const
 Qt::KeyboardModifiers QHotkey::modifiers() const
 {
 	return this->mods;
+}
+
+QHotkey::NativeShortcut QHotkey::currentNativeShortcut() const
+{
+	return this->nativeShortcut;
 }
 
 bool QHotkey::isRegistered() const
@@ -116,6 +127,32 @@ bool QHotkey::resetShortcut()
 	this->mods = Qt::NoModifier;
 	this->nativeShortcut = NativeShortcut();
 	return true;
+}
+
+bool QHotkey::setNativeShortcut(QHotkey::NativeShortcut nativeShortcut, bool autoRegister)
+{
+	if(this->registered) {
+		if(autoRegister) {
+			if(!QHotkeyPrivate::instance()->removeShortcut(this))
+				return false;
+		} else
+			return false;
+	}
+
+	if(nativeShortcut.isValid()) {
+		this->key = Qt::Key_unknown;
+		this->mods = Qt::NoModifier;
+		this->nativeShortcut = nativeShortcut;
+		if(autoRegister)
+			return QHotkeyPrivate::instance()->addShortcut(this);
+		else
+			return true;
+	} else {
+		this->key = Qt::Key_unknown;
+		this->mods = Qt::NoModifier;
+		this->nativeShortcut = NativeShortcut();
+		return true;
+	}
 }
 
 bool QHotkey::setRegistered(bool registered)
