@@ -21,15 +21,22 @@ public:
 	//! Defines shortcut with native keycodes
 	class NativeShortcut {
 	public:
+		//! The native keycode
 		quint32 key;
+		//! The native modifiers
 		quint32 modifier;
 
+		//! Creates an invalid native shortcut
 		NativeShortcut();
+		//! Creates a valid native shortcut, with the given key and modifiers
 		NativeShortcut(quint32 key, quint32 modifier = 0);
 
+		//! Checks, whether this shortcut is valid or not
 		bool isValid() const;
 
+		//! Equality operator
 		bool operator ==(const NativeShortcut &other) const;
+		//! Inequality operator
 		bool operator !=(const NativeShortcut &other) const;
 
 	private:
@@ -56,7 +63,7 @@ public:
 	//! READ-Accessor for QHotkey::shortcut - the modifiers only
 	Qt::KeyboardModifiers modifiers() const;
 
-	// Get the current native shortcut
+	//! Get the current native shortcut
 	NativeShortcut currentNativeShortcut() const;
 
 public slots:
@@ -70,6 +77,7 @@ public slots:
 	//! RESET-Accessor for QHotkey::shortcut
 	bool resetShortcut();
 
+	//! Set this hotkey to a native shortcut
 	bool setNativeShortcut(NativeShortcut nativeShortcut, bool autoRegister = false);
 
 signals:

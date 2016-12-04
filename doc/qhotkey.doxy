@@ -1,4 +1,4 @@
-# Doxyfile 1.8.11
+# Doxyfile 1.8.12
 
 # This file describes the settings to be used by the documentation system
 # doxygen (www.doxygen.org) for a project.
@@ -38,7 +38,7 @@ PROJECT_NAME           = QHotkey
 # could be handy for archiving the generated documentation or if some version
 # control system is used.
 
-PROJECT_NUMBER         = 1.0.0
+PROJECT_NUMBER         = 1.1.0
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer a
@@ -251,11 +251,11 @@ ALIASES                = "accessors{1}=<table><tr><th colspan= 2>Accessors</th><
                          userAc{1}=<tr><td><b>USER</b></td><td>\1</td></tr> \
                          "constantAc=<tr><td colspan= 2><b>CONSTANT</b></td></tr>" \
                          "finalAc=<tr><td colspan= 2><b>FINAL</b></td></tr>" \
-						 "default{1}=<b>Default:</b> \1 <br>" \
-						 overloads{1}=<b>Overloads:</b><ul>\1</ul> \
-						 ovElem{1}=<li>\1</li> \
-						 "overload=<i>This is an overloaded function.</i>" \
-						 "povElem{1}=<li>\1 <i>(primary, check for more details)</i></li>"
+                         "default{1}=<b>Default:</b> \1 <br>" \
+                         overloads{1}=<b>Overloads:</b><ul>\1</ul> \
+                         ovElem{1}=<li>\1</li> \
+                         "overload=<i>This is an overloaded function.</i>" \
+                         "povElem{1}=<li>\1 <i>(primary, check for more details)</i></li>"
 
 # This tag can be used to specify a number of word-keyword mappings (TCL only).
 # A mapping has the form "name=value". For example adding "class=itcl::class"
@@ -319,6 +319,15 @@ EXTENSION_MAPPING      =
 # The default value is: YES.
 
 MARKDOWN_SUPPORT       = YES
+
+# When the TOC_INCLUDE_HEADINGS tag is set to a non-zero value, all headings up
+# to that level are automatically included in the table of contents, even if
+# they do not have an id attribute.
+# Note: This feature currently applies only to Markdown headings.
+# Minimum value: 0, maximum value: 99, default value: 0.
+# This tag requires that the tag MARKDOWN_SUPPORT is set to YES.
+
+TOC_INCLUDE_HEADINGS   = 0
 
 # When enabled doxygen tries to link words that correspond to documented
 # classes, or namespaces to their corresponding documentation. Such a link can
@@ -822,8 +831,8 @@ INPUT_ENCODING         = UTF-8
 # If left blank the following patterns are tested:*.c, *.cc, *.cxx, *.cpp,
 # *.c++, *.java, *.ii, *.ixx, *.ipp, *.i++, *.inl, *.idl, *.ddl, *.odl, *.h,
 # *.hh, *.hxx, *.hpp, *.h++, *.cs, *.d, *.php, *.php4, *.php5, *.phtml, *.inc,
-# *.m, *.markdown, *.md, *.mm, *.dox, *.py, *.pyw, *.f90, *.f, *.for, *.tcl,
-# *.vhd, *.vhdl, *.ucf, *.qsf, *.as and *.js.
+# *.m, *.markdown, *.md, *.mm, *.dox, *.py, *.pyw, *.f90, *.f95, *.f03, *.f08,
+# *.f, *.for, *.tcl, *.vhd, *.vhdl, *.ucf and *.qsf.
 
 FILE_PATTERNS          = *.c \
                          *.cc \
@@ -912,7 +921,12 @@ EXCLUDE_PATTERNS       = moc_* \
 # Note that the wildcards are matched against the file with absolute path, so to
 # exclude all test directories use the pattern */test/*
 
-EXCLUDE_SYMBOLS        = 
+EXCLUDE_SYMBOLS        = QBasicAtomicInteger \
+                         QBasicAtomicPointer \
+                         QFutureWatcherBase \
+                         QListSpecialMethods \
+                         QPaintEngineEx \
+                         QQmlExtensionInterface
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or directories
 # that contain example code fragments that are included (see the \include
@@ -1442,7 +1456,7 @@ QHP_SECT_FILTER_ATTRS  =
 # generated .qhp file.
 # This tag requires that the tag GENERATE_QHP is set to YES.
 
-QHG_LOCATION           = C:/Qt/5.5/msvc2013_64/bin/qhelpgenerator.exe
+QHG_LOCATION           = C:/Qt/5.7/msvc2015_64/bin/qhelpgenerator.exe
 
 # If the GENERATE_ECLIPSEHELP tag is set to YES, additional index files will be
 # generated, together with the HTML files, they form an Eclipse help plugin. To
@@ -2093,7 +2107,7 @@ SEARCH_INCLUDES        = YES
 # preprocessor.
 # This tag requires that the tag SEARCH_INCLUDES is set to YES.
 
-INCLUDE_PATH           = C:/Qt/5.5/msvc2013_64/include
+INCLUDE_PATH           = C:/Qt/5.7/msvc2015_64/include
 
 # You can use the INCLUDE_FILE_PATTERNS tag to specify one or more wildcard
 # patterns (like *.h and *.hpp) to filter out the header-files in the
@@ -2151,36 +2165,31 @@ SKIP_FUNCTION_MACROS   = YES
 # the path). If a tag file is not located in the directory in which doxygen is
 # run, you must also specify the path to the tagfile here.
 
-TAGFILES               = C:/Qt/Docs/Qt-5.5/qtwebengine/qtwebengine.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qtgraphicaleffects/qtgraphicaleffects.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qt3dcollision/qt3dcollision.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qt3dlogic/qt3dlogic.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qt3dcore/qt3dcore.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qt3drenderer/qt3drenderer.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qtwebchannel/qtwebchannel.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qtwebsockets/qtwebsockets.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qtbluetooth/qtbluetooth.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qtnfc/qtnfc.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qtsensors/qtsensors.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qtlocation/qtlocation.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qtpositioning/qtpositioning.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/activeqt/activeqt.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qtquickcontrols/qtquickcontrols.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qtqml/qtqml.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qtquick/qtquick.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qtxmlpatterns/qtxmlpatterns.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qtsvg/qtsvg.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qdoc/qdoc.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qtprintsupport/qtprintsupport.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qtconcurrent/qtconcurrent.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qtgui/qtgui.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qttestlib/qttestlib.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qtwidgets/qtwidgets.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qtcore/qtcore.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qtnetwork/qtnetwork.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qtsql/qtsql.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qtxml/qtxml.tags=http://doc.qt.io/qt-5 \
-                         C:/Qt/Docs/Qt-5.5/qtwebenginewidgets/qtwebenginewidgets.tags=http://doc.qt.io/qt-5
+TAGFILES               = C:/Qt/Docs/Qt-5.7/qtwebengine/qtwebengine.tags=http://doc.qt.io/qt-5 \
+                         C:/Qt/Docs/Qt-5.7/qtgraphicaleffects/qtgraphicaleffects.tags=http://doc.qt.io/qt-5 \
+                         C:/Qt/Docs/Qt-5.7/qtwebchannel/qtwebchannel.tags=http://doc.qt.io/qt-5 \
+                         C:/Qt/Docs/Qt-5.7/qtwebsockets/qtwebsockets.tags=http://doc.qt.io/qt-5 \
+                         C:/Qt/Docs/Qt-5.7/qtbluetooth/qtbluetooth.tags=http://doc.qt.io/qt-5 \
+                         C:/Qt/Docs/Qt-5.7/qtnfc/qtnfc.tags=http://doc.qt.io/qt-5 \
+                         C:/Qt/Docs/Qt-5.7/qtsensors/qtsensors.tags=http://doc.qt.io/qt-5 \
+                         C:/Qt/Docs/Qt-5.7/qtlocation/qtlocation.tags=http://doc.qt.io/qt-5 \
+                         C:/Qt/Docs/Qt-5.7/qtpositioning/qtpositioning.tags=http://doc.qt.io/qt-5 \
+                         C:/Qt/Docs/Qt-5.7/activeqt/activeqt.tags=http://doc.qt.io/qt-5 \
+                         C:/Qt/Docs/Qt-5.7/qtquickcontrols/qtquickcontrols.tags=http://doc.qt.io/qt-5 \
+                         C:/Qt/Docs/Qt-5.7/qtqml/qtqml.tags=http://doc.qt.io/qt-5 \
+                         C:/Qt/Docs/Qt-5.7/qtquick/qtquick.tags=http://doc.qt.io/qt-5 \
+                         C:/Qt/Docs/Qt-5.7/qtxmlpatterns/qtxmlpatterns.tags=http://doc.qt.io/qt-5 \
+                         C:/Qt/Docs/Qt-5.7/qtsvg/qtsvg.tags=http://doc.qt.io/qt-5 \
+                         C:/Qt/Docs/Qt-5.7/qdoc/qdoc.tags=http://doc.qt.io/qt-5 \
+                         C:/Qt/Docs/Qt-5.7/qtprintsupport/qtprintsupport.tags=http://doc.qt.io/qt-5 \
+                         C:/Qt/Docs/Qt-5.7/qtconcurrent/qtconcurrent.tags=http://doc.qt.io/qt-5 \
+                         C:/Qt/Docs/Qt-5.7/qtgui/qtgui.tags=http://doc.qt.io/qt-5 \
+                         C:/Qt/Docs/Qt-5.7/qttestlib/qttestlib.tags=http://doc.qt.io/qt-5 \
+                         C:/Qt/Docs/Qt-5.7/qtwidgets/qtwidgets.tags=http://doc.qt.io/qt-5 \
+                         C:/Qt/Docs/Qt-5.7/qtcore/qtcore.tags=http://doc.qt.io/qt-5 \
+                         C:/Qt/Docs/Qt-5.7/qtnetwork/qtnetwork.tags=http://doc.qt.io/qt-5 \
+                         C:/Qt/Docs/Qt-5.7/qtsql/qtsql.tags=http://doc.qt.io/qt-5 \
+                         C:/Qt/Docs/Qt-5.7/qtxml/qtxml.tags=http://doc.qt.io/qt-5
 
 # When a file name is specified after GENERATE_TAGFILE, doxygen will create a
 # tag file that is based on the input files it reads. See section "Linking to

@@ -60,29 +60,7 @@ it does. This does not happen if used from the main thread.
  }
 }
 
-@sa QHotkey::registered, QHotkey::isKeyCaptured
-*/
-
-/*!
-@typedef QHotkey::NativeShortcut
-
-<table>
- <tr>
-  <th>Member</th>
-  <th>Details</th>
- </tr>
- <tr>
-  <td>first</td>
-  <td>The keycode of the key to be pressed</td>
- </tr>
- <tr>
-  <td>second</td>
-  <td>The modifiers that have to be pressed together with the key</td>
- </tr>
-</table>
-
-The NativeShortcut is used internally only and holds the native keycode and modifiers, after they have been translated
-from Qt::Key and Qt::Modifiers into the native ones.
+@sa QHotkey::registered, QHotkey::isKeyCaptured, QHotkey::currentNativeShortcut, QHotkey::setNativeShortcut
 */
 
 /*!
@@ -95,6 +73,7 @@ from Qt::Key and Qt::Modifiers into the native ones.
  @povElem{QHotkey::QHotkey(QObject *)}
  @ovElem{QHotkey::QHotkey(const QKeySequence &, bool, QObject *)}
  @ovElem{QHotkey::QHotkey(Qt::Key, Qt::KeyboardModifiers, bool, QObject *)}
+ @ovElem{QHotkey::QHotkey(const NativeShortcut &, bool, QObject *)}
 }
 */
 
@@ -110,6 +89,7 @@ from Qt::Key and Qt::Modifiers into the native ones.
  @povElem{QHotkey::QHotkey(QObject *)}
  @ovElem{QHotkey::QHotkey(const QKeySequence &, bool, QObject *)}
  @ovElem{QHotkey::QHotkey(Qt::Key, Qt::KeyboardModifiers, bool, QObject *)}
+ @ovElem{QHotkey::QHotkey(const NativeShortcut &, bool, QObject *)}
 }
 
 @sa QHotkey::shortcut, QHotkey::registered
@@ -128,9 +108,30 @@ from Qt::Key and Qt::Modifiers into the native ones.
  @povElem{QHotkey::QHotkey(QObject *)}
  @ovElem{QHotkey::QHotkey(const QKeySequence &, bool, QObject *)}
  @ovElem{QHotkey::QHotkey(Qt::Key, Qt::KeyboardModifiers, bool, QObject *)}
+ @ovElem{QHotkey::QHotkey(const NativeShortcut &, bool, QObject *)}
 }
 
 @sa QHotkey::shortcut, QHotkey::registered
+*/
+
+/*!
+@fn QHotkey::QHotkey(const NativeShortcut &, bool, QObject *)
+
+@overload
+@param parent The parent object
+@param shortcut The native shortcut this hotkey should be registered for
+@param autoRegister Specifies, whether the hotkey should be automatically registered or not
+
+@note Please check QHotkey::setNativeShortcut for important hints!
+
+@overloads{
+ @povElem{QHotkey::QHotkey(QObject *)}
+ @ovElem{QHotkey::QHotkey(const QKeySequence &, bool, QObject *)}
+ @ovElem{QHotkey::QHotkey(Qt::Key, Qt::KeyboardModifiers, bool, QObject *)}
+ @ovElem{QHotkey::QHotkey(const NativeShortcut &, bool, QObject *)}
+}
+
+@sa QHotkey::setNativeShortcut, QHotkey::registered
 */
 
 /*!
@@ -145,10 +146,36 @@ Otherwise your application will hang up.
 */
 
 /*!
+@fn QHotkey::setNativeShortcut
+
+@param nativeShortcut The native shortcut to be set
+@param autoRegister Specifies, whether the hotkey should be automatically registered, or not
+@returns `true`, if the shortcut could be successfully set/registered, `false` if not
+
+@warning Setting the native shortcut will cause the shortcut(), keyCode() and modifiers() functions
+to return "invalid values", i.e. if a hotkey has an explicitly set native shortcut, it will not be able
+to get the Qt values for them.
+
+@sa QHotkey::currentNativeShortcut, QHotkey::shortcut, QHotkey::registered
+*/
+
+/*!
 @fn QHotkey::activated
 
 This signal can only be emitted if Hotkey::registered is set to true (with a valid key-sequence). The signal will always be emitted
 from the thread this instance lives on.
 
 @note This is a private signal. It can be used in signal connections but cannot be emitted by the user.
+*/
+
+/*!
+@class QHotkey::NativeShortcut
+
+The NativeShortcut holds the native keycode and modifiers, after they have been translated
+from Qt::Key and Qt::Modifiers into the native ones.
+
+It can be used to find out how a current hotkey is mapped to the system, or to explicitly create
+a shortcut from those native values
+
+@sa QHotkey::setNativeShortcut
 */
