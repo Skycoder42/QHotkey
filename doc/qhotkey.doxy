@@ -1417,7 +1417,7 @@ QCH_FILE               = QHotkeyHelp.qch
 # The default value is: org.doxygen.Project.
 # This tag requires that the tag GENERATE_QHP is set to YES.
 
-QHP_NAMESPACE          = com.github.Skycoder42.QHotkey
+QHP_NAMESPACE          = com.Skycoder42.QHotkey.110
 
 # The QHP_VIRTUAL_FOLDER tag specifies the namespace to use when generating Qt
 # Help Project output. For more information please see Qt Help Project / Virtual
