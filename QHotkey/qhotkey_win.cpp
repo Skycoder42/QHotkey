@@ -3,7 +3,7 @@
 #include <qt_windows.h>
 #include <QDebug>
 
-#define HKEY_ID(nativeShortcut) (((nativeShortcut.first ^ (nativeShortcut.second << 8)) & 0x0FFF) | 0x7000)
+#define HKEY_ID(nativeShortcut) (((nativeShortcut.key ^ (nativeShortcut.modifier << 8)) & 0x0FFF) | 0x7000)
 
 class QHotkeyPrivateWin : public QHotkeyPrivate
 {
@@ -223,8 +223,8 @@ bool QHotkeyPrivateWin::registerShortcut(QHotkey::NativeShortcut shortcut)
 {
 	BOOL ok = RegisterHotKey(NULL,
 							 HKEY_ID(shortcut),
-							 shortcut.second,
-							 shortcut.first);
+							 shortcut.modifier,
+							 shortcut.key);
 	if(ok)
 		return true;
 	else {

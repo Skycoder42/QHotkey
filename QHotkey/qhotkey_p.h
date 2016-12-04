@@ -16,7 +16,6 @@ public:
 	~QHotkeyPrivate();
 
 	static QHotkeyPrivate *instance();
-	static inline bool testValid(QHotkey::NativeShortcut nativeShortcut);
 
 	QHotkey::NativeShortcut nativeShortcut(Qt::Key keycode, Qt::KeyboardModifiers modifiers);
 
@@ -37,7 +36,7 @@ private:/*functions*/
 	Q_INVOKABLE bool removeShortcutInvoked(QHotkey *hotkey);
 	Q_INVOKABLE inline QHotkey::NativeShortcut nativeShortcutInvoked(Qt::Key keycode, Qt::KeyboardModifiers modifiers);
 
-private:
+private:	
 	QMultiHash<QHotkey::NativeShortcut, QHotkey*> shortcuts;
 };
 
@@ -48,11 +47,6 @@ private:
 	{\
 		return hotkeyPrivate;\
 	}
-
-inline bool QHotkeyPrivate::testValid(QHotkey::NativeShortcut nativeShortcut)
-{
-	return (nativeShortcut.first != 0);
-}
 
 inline QHotkey::NativeShortcut QHotkeyPrivate::nativeShortcutInvoked(Qt::Key keycode, Qt::KeyboardModifiers modifiers) {
 	return {this->nativeKeycode(keycode), this->nativeModifiers(modifiers)};

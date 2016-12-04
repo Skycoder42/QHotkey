@@ -19,7 +19,22 @@ class QHotkey : public QObject
 
 public:
 	//! Defines shortcut with native keycodes
-	typedef QPair<quint32, quint32> NativeShortcut;
+	class NativeShortcut {
+	public:
+		quint32 key;
+		quint32 modifier;
+
+		NativeShortcut();
+		NativeShortcut(quint32 key, quint32 modifier = 0);
+
+		bool isValid() const;
+
+		bool operator ==(const NativeShortcut &other) const;
+		bool operator !=(const NativeShortcut &other) const;
+
+	private:
+		bool valid;
+	};
 
 	//! Constructor
 	explicit QHotkey(QObject *parent = Q_NULLPTR);
@@ -64,6 +79,9 @@ private:
 	NativeShortcut nativeShortcut;
 	bool registered;
 };
+
+uint qHash(const QHotkey::NativeShortcut &key);
+uint qHash(const QHotkey::NativeShortcut &key, uint seed);
 
 Q_DECLARE_LOGGING_CATEGORY(logQHotkey)
 

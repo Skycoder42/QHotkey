@@ -91,7 +91,7 @@ bool QHotkey::setShortcut(Qt::Key key, Qt::KeyboardModifiers modifiers, bool aut
 	this->key = key;
 	this->mods = modifiers;
 	this->nativeShortcut = QHotkeyPrivate::instance()->nativeShortcut(key, modifiers);
-	if(QHotkeyPrivate::testValid(this->nativeShortcut)) {
+	if(this->nativeShortcut.isValid()) {
 		if(autoRegister)
 			return QHotkeyPrivate::instance()->addShortcut(this);
 		else
@@ -123,7 +123,7 @@ bool QHotkey::setRegistered(bool registered)
 	if(this->registered && !registered)
 		return QHotkeyPrivate::instance()->removeShortcut(this);
 	else if(!this->registered && registered) {
-		if(!QHotkeyPrivate::testValid(this->nativeShortcut))
+		if(!this->nativeShortcut.isValid())
 			return false;
 		else
 			return QHotkeyPrivate::instance()->addShortcut(this);
@@ -238,4 +238,47 @@ bool QHotkeyPrivate::removeShortcutInvoked(QHotkey *hotkey)
 		return this->unregisterShortcut(shortcut);
 	else
 		return true;
+}
+
+
+
+QHotkey::NativeShortcut::NativeShortcut() :
+	key(),
+	modifier(),
+	valid(false)
+{}
+
+QHotkey::NativeShortcut::NativeShortcut(quint32 key, quint32 modifier) :
+	key(key),
+	modifier(modifier),
+	valid(true)
+{}
+
+bool QHotkey::NativeShortcut::isValid() const
+{
+	return this->valid;
+}
+
+bool QHotkey::NativeShortcut::operator ==(const QHotkey::NativeShortcut &other) const
+{
+	return (this->key == other.key) &&
+		   (this->modifier == other.modifier) &&
+		   this->valid == other.valid;
+}
+
+bool QHotkey::NativeShortcut::operator !=(const QHotkey::NativeShortcut &other) const
+{
+	return (this->key != other.key) ||
+		   (this->modifier != other.modifier) ||
+		   this->valid != other.valid;
+}
+
+uint qHash(const QHotkey::NativeShortcut &key)
+{
+	return qHash(key.key) ^ qHash(key.modifier);
+}
+
+uint qHash(const QHotkey::NativeShortcut &key, uint seed)
+{
+	return qHash(key.key, seed) ^ qHash(key.modifier, seed);
 }
