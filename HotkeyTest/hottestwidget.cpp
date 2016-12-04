@@ -11,8 +11,8 @@ HotTestWidget::HotTestWidget(QWidget *parent) :
 	hotkey_5(new QHotkey(NULL)),
 	thread4(new QThread(this)),
 	thread5(new QThread(this)),
-	nativeHotkey(new QHotkey(this)),
-	testHotkeys()
+	testHotkeys(),
+	nativeHotkey(new QHotkey(this))
 {
 	ui->setupUi(this);
 	this->thread4->start();

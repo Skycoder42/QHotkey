@@ -99,8 +99,8 @@ bool QHotkeyPrivateX11::registerShortcut(QHotkey::NativeShortcut shortcut)
     HotkeyErrorHandler errorHandler;
     for(quint32 specialMod : QHotkeyPrivateX11::specialModifiers) {
         XGrabKey(display,
-                 shortcut.first,
-                 shortcut.second | specialMod,
+				 shortcut.key,
+				 shortcut.modifier | specialMod,
                  DefaultRootWindow(display),
                  True,
                  GrabModeAsync,
@@ -125,8 +125,8 @@ bool QHotkeyPrivateX11::unregisterShortcut(QHotkey::NativeShortcut shortcut)
     HotkeyErrorHandler errorHandler;
     for(quint32 specialMod : QHotkeyPrivateX11::specialModifiers) {
         XUngrabKey(display,
-                   shortcut.first,
-                   shortcut.second | specialMod,
+				   shortcut.key,
+				   shortcut.modifier | specialMod,
                    DefaultRootWindow(display));
     }
 
