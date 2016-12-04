@@ -196,12 +196,12 @@ bool QHotkeyPrivateMac::registerShortcut(QHotkey::NativeShortcut shortcut)
 	}
 
 	EventHotKeyID hkeyID;
-	hkeyID.signature = shortcut.first;
-	hkeyID.id = shortcut.second;
+    hkeyID.signature = shortcut.key;
+    hkeyID.id = shortcut.modifier;
 
 	EventHotKeyRef eventRef = 0;
-	OSStatus status = RegisterEventHotKey(shortcut.first,
-										  shortcut.second,
+    OSStatus status = RegisterEventHotKey(shortcut.key,
+                                          shortcut.modifier,
 										  hkeyID,
 										  GetApplicationEventTarget(),
 										  0,
