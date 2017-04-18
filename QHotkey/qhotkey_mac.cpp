@@ -163,9 +163,9 @@ quint32 QHotkeyPrivateMac::nativeKeycode(Qt::Key keycode)
 				else if (!(keyToChar[k] & kUCKeyOutputSequenceIndexMask) && keyToChar[k] < 0xFFFE) {
 					if (keyToChar[k] == ch) return k;
 				}
-			} // for k
-		} // for j
-	} // for i
+			}
+		}
+	}
 	return 0;
 }
 
@@ -196,12 +196,12 @@ bool QHotkeyPrivateMac::registerShortcut(QHotkey::NativeShortcut shortcut)
 	}
 
 	EventHotKeyID hkeyID;
-    hkeyID.signature = shortcut.key;
-    hkeyID.id = shortcut.modifier;
+	hkeyID.signature = shortcut.key;
+	hkeyID.id = shortcut.modifier;
 
 	EventHotKeyRef eventRef = 0;
-    OSStatus status = RegisterEventHotKey(shortcut.key,
-                                          shortcut.modifier,
+	OSStatus status = RegisterEventHotKey(shortcut.key,
+										  shortcut.modifier,
 										  hkeyID,
 										  GetApplicationEventTarget(),
 										  0,

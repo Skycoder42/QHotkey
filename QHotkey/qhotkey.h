@@ -48,7 +48,7 @@ public:
 	//! Constructs a hotkey with a shortcut and optionally registers it
 	explicit QHotkey(const QKeySequence &shortcut, bool autoRegister = false, QObject *parent = Q_NULLPTR);
 	//! Constructs a hotkey with a key and modifiers and optionally registers it
-	explicit QHotkey(Qt::Key key, Qt::KeyboardModifiers modifiers, bool autoRegister = false, QObject *parent = Q_NULLPTR);
+	explicit QHotkey(Qt::Key keyCode, Qt::KeyboardModifiers modifiers, bool autoRegister = false, QObject *parent = Q_NULLPTR);
 	//! Constructs a hotkey from a native shortcut and optionally registers it
 	explicit QHotkey(const NativeShortcut &shortcut, bool autoRegister = false, QObject *parent = Q_NULLPTR);
 	//! Destructor
@@ -73,7 +73,7 @@ public slots:
 	//! WRITE-Accessor for QHotkey::shortcut
 	bool setShortcut(const QKeySequence &shortcut, bool autoRegister = false);
 	//! WRITE-Accessor for QHotkey::shortcut
-	bool setShortcut(Qt::Key key, Qt::KeyboardModifiers modifiers, bool autoRegister = false);
+	bool setShortcut(Qt::Key keyCode, Qt::KeyboardModifiers modifiers, bool autoRegister = false);
 	//! RESET-Accessor for QHotkey::shortcut
 	bool resetShortcut();
 
@@ -88,11 +88,11 @@ signals:
 	void registeredChanged(bool registered);
 
 private:
-	Qt::Key key;
-	Qt::KeyboardModifiers mods;
+	Qt::Key _keyCode;
+	Qt::KeyboardModifiers _modifiers;
 
-	NativeShortcut nativeShortcut;
-	bool registered;
+	NativeShortcut _nativeShortcut;
+	bool _registered;
 };
 
 uint qHash(const QHotkey::NativeShortcut &key);

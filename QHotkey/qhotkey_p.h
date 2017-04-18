@@ -31,13 +31,12 @@ protected:
 	virtual bool registerShortcut(QHotkey::NativeShortcut shortcut) = 0;//platform implement
 	virtual bool unregisterShortcut(QHotkey::NativeShortcut shortcut) = 0;//platform implement
 
-private:/*functions*/
+private:
+	QMultiHash<QHotkey::NativeShortcut, QHotkey*> shortcuts;
+
 	Q_INVOKABLE bool addShortcutInvoked(QHotkey *hotkey);
 	Q_INVOKABLE bool removeShortcutInvoked(QHotkey *hotkey);
-	Q_INVOKABLE inline QHotkey::NativeShortcut nativeShortcutInvoked(Qt::Key keycode, Qt::KeyboardModifiers modifiers);
-
-private:	
-	QMultiHash<QHotkey::NativeShortcut, QHotkey*> shortcuts;
+	Q_INVOKABLE QHotkey::NativeShortcut nativeShortcutInvoked(Qt::Key keycode, Qt::KeyboardModifiers modifiers);
 };
 
 #define NATIVE_INSTANCE(ClassName) \
@@ -47,9 +46,5 @@ private:
 	{\
 		return hotkeyPrivate;\
 	}
-
-inline QHotkey::NativeShortcut QHotkeyPrivate::nativeShortcutInvoked(Qt::Key keycode, Qt::KeyboardModifiers modifiers) {
-	return {this->nativeKeycode(keycode), this->nativeModifiers(modifiers)};
-}
 
 #endif // QHOTKEY_P_H

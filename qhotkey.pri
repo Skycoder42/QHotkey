@@ -18,6 +18,3 @@ mac {
 }
 
 INCLUDEPATH += $$PWD/QHotkey
-
-DISTFILES += \
-    $$PWD/QHotkey/qhotkey.pri
