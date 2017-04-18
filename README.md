@@ -12,8 +12,17 @@ The QHotkey is a class that can be used to create hotkeys/global shortcuts, aka 
 - Thread-Safe - Can be used on all threads (See section Thread safety)
 - Allows usage of native keycodes and modifiers, if needed
 
+## Installation
+The package is providet as qpm package, [`de.skycoder42.qhotkey`](https://www.qpm.io/packages/de.skycoder42.qhotkey/index.html). To install:
+
+1. Install qpm (See [GitHub - Installing](https://github.com/Cutehacks/qpm/blob/master/README.md#installing))
+2. In your projects root directory, run `qpm install de.skycoder42.qhotkey`
+3. Include qpm to your project by adding `include(vendor/vendor.pri)` to your `.pro` file
+
+Check their [GitHub - Usage for App Developers](https://github.com/Cutehacks/qpm/blob/master/README.md#usage-for-app-developers) to learn more about qpm.
+
 ## Usage
-Just copy the repository into you application (preferebly by adding it as a git submodule) and add the line `include(./QHotkey/qhotkey.pri)` to your .pro-file. This way all files and required libraries will automatically be added. Use `#include <QHotkey>` to access the class.
+The general usage is to create QHotkey instances for specific hotkeys, register them and then simply connect to the signal emitted once the hotkey is pressed.
 
 ### Example
 The following example shows a simple application that will run without a window in the background until you press the key-combination <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Q</kbd> (<kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>Q</kbd> on Mac). This will quit the application. The debug output will tell if the hotkey was successfully registered and that it was pressed.
@@ -69,7 +78,7 @@ The documentation was created using [doxygen](http://www.doxygen.org). It includ
 ## Technical
 ### Requirements
  - I built it with Qt 5.7, but may work with earlier versions, too
- - At least the QtGui-Module (a QGuiApplication). Hotkeys on console based applications are not supported. (By the operating systems)
+ - At least the QtGui-Module (a QGuiApplication). Hotkeys on console based applications are not supported (By the operating systems). You can however create a gui application without any visible window.
  - C++11
 
 ### Known Limitations
