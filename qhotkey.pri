@@ -10,7 +10,7 @@ mac {
 	LIBS += -framework Carbon
 } else:win32 {
 	SOURCES += $$PWD/QHotkey/qhotkey_win.cpp
-	LIBS += -lUser32
+	LIBS += -luser32
 } else:unix {
 	SOURCES += $$PWD/QHotkey/qhotkey_x11.cpp
 	QT += x11extras
