@@ -106,6 +106,7 @@ bool QHotkeyPrivateX11::registerShortcut(QHotkey::NativeShortcut shortcut)
 				 GrabModeAsync,
 				 GrabModeAsync);
 	}
+	XSync(display, QueuedAlready);
 
 	if(errorHandler.hasError) {
 		qCWarning(logQHotkey) << "Failed to register hotkey. Error:"
@@ -129,6 +130,7 @@ bool QHotkeyPrivateX11::unregisterShortcut(QHotkey::NativeShortcut shortcut)
 				   shortcut.modifier | specialMod,
 				   DefaultRootWindow(display));
 	}
+	XSync(display, QueuedAlready);
 
 	if(errorHandler.hasError) {
 		qCWarning(logQHotkey) << "Failed to unregister hotkey. Error:"
