@@ -135,7 +135,6 @@ bool QHotkeyPrivateX11::unregisterShortcut(QHotkey::NativeShortcut shortcut)
 	if(errorHandler.hasError) {
 		qCWarning(logQHotkey) << "Failed to unregister hotkey. Error:"
 							  << qPrintable(errorHandler.errorString);
-		this->unregisterShortcut(shortcut);
 		return false;
 	} else
 		return true;
