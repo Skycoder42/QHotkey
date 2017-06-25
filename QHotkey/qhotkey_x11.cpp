@@ -106,7 +106,7 @@ bool QHotkeyPrivateX11::registerShortcut(QHotkey::NativeShortcut shortcut)
 				 GrabModeAsync,
 				 GrabModeAsync);
 	}
-	XFlush(display);
+	XSync(display, False);
 
 	if(errorHandler.hasError) {
 		qCWarning(logQHotkey) << "Failed to register hotkey. Error:"
@@ -130,7 +130,7 @@ bool QHotkeyPrivateX11::unregisterShortcut(QHotkey::NativeShortcut shortcut)
 				   shortcut.modifier | specialMod,
 				   DefaultRootWindow(display));
 	}
-	XFlush(display);
+	XSync(display, False);
 
 	if(errorHandler.hasError) {
 		qCWarning(logQHotkey) << "Failed to unregister hotkey. Error:"
@@ -156,27 +156,32 @@ QString QHotkeyPrivateX11::HotkeyErrorHandler::errorString;
 
 QHotkeyPrivateX11::HotkeyErrorHandler::HotkeyErrorHandler()
 {
-	this->prevHandler = XSetErrorHandler(&HotkeyErrorHandler::handleError);
+	prevHandler = XSetErrorHandler(&HotkeyErrorHandler::handleError);
 }
 
 QHotkeyPrivateX11::HotkeyErrorHandler::~HotkeyErrorHandler()
 {
-	XSetErrorHandler(this->prevHandler);
+	XSetErrorHandler(prevHandler);
+	hasError = false;
+	errorString.clear();
 }
 
 int QHotkeyPrivateX11::HotkeyErrorHandler::handleError(Display *display, XErrorEvent *error)
 {
+QT_WARNING_PUSH
+QT_WARNING_DISABLE_GCC("-Wimplicit-fallthrough")
 	switch (error->error_code) {
 	case BadAccess:
 	case BadValue:
 	case BadWindow:
 		if (error->request_code == 33 || //grab key
 			error->request_code == 34) {// ungrab key
-			HotkeyErrorHandler::hasError = true;
-			HotkeyErrorHandler::errorString = QHotkeyPrivateX11::formatX11Error(display, error->error_code);
+			hasError = true;
+			errorString = QHotkeyPrivateX11::formatX11Error(display, error->error_code);
 			return 1;
 		}
 	default:
 		return 0;
 	}
+QT_WARNING_POP
 }
