@@ -5,7 +5,7 @@
         "file": "LICENSE",
         "name": "BSD_3_CLAUSE"
     },
-    "prcFile": "",
+    "prcFile": "qhotkey.prc",
     "priFile": "qhotkey.pri",
     "priIncludes": [
     ],
