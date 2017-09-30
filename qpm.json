@@ -1,22 +1,22 @@
 {
-  "name": "de.skycoder42.qhotkey",
-  "description": "A global shortcut/hotkey for Desktop Qt-Applications",
-  "author": {
-    "name": "Skycoder",
-    "email": "skycoder42.de@gmx.de"
-  },
-  "repository": {
-    "type": "GITHUB",
-    "url": "https://github.com/Skycoder42/QHotkey.git"
-  },
-  "version": {
-    "label": "1.1.4",
-    "revision": "",
-    "fingerprint": ""
-  },
-  "dependencies": [
-  ],
-  "license": "BSD_3_CLAUSE",
-  "pri_filename": "qhotkey.pri",
-  "webpage": "https://github.com/Skycoder42/QHotkey"
+    "author": {
+        "email": "skycoder42.de@gmx.de",
+        "name": "Skycoder"
+    },
+    "dependencies": [
+    ],
+    "description": "A global shortcut/hotkey for Desktop Qt-Applications",
+    "license": "BSD_3_CLAUSE",
+    "name": "de.skycoder42.qhotkey",
+    "pri_filename": "qhotkey.pri",
+    "repository": {
+        "type": "GITHUB",
+        "url": "https://github.com/Skycoder42/QHotkey.git"
+    },
+    "version": {
+        "fingerprint": "",
+        "label": "1.2.0",
+        "revision": ""
+    },
+    "webpage": "https://github.com/Skycoder42/QHotkey"
 }
