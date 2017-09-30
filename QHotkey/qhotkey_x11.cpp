@@ -14,8 +14,8 @@ public:
 
 protected:
 	// QHotkeyPrivate interface
-	quint32 nativeKeycode(Qt::Key keycode) Q_DECL_OVERRIDE;
-	quint32 nativeModifiers(Qt::KeyboardModifiers modifiers) Q_DECL_OVERRIDE;
+	quint32 nativeKeycode(Qt::Key keycode, bool &ok) Q_DECL_OVERRIDE;
+	quint32 nativeModifiers(Qt::KeyboardModifiers modifiers, bool &ok) Q_DECL_OVERRIDE;
 	bool registerShortcut(QHotkey::NativeShortcut shortcut) Q_DECL_OVERRIDE;
 	bool unregisterShortcut(QHotkey::NativeShortcut shortcut) Q_DECL_OVERRIDE;
 
@@ -58,7 +58,7 @@ bool QHotkeyPrivateX11::nativeEventFilter(const QByteArray &eventType, void *mes
 	return false;
 }
 
-quint32 QHotkeyPrivateX11::nativeKeycode(Qt::Key keycode)
+quint32 QHotkeyPrivateX11::nativeKeycode(Qt::Key keycode, bool &ok)
 {
 	KeySym keysym = XStringToKeysym(QKeySequence(keycode).toString(QKeySequence::NativeText).toLatin1().constData());
 	if (keysym == NoSymbol) {
@@ -70,13 +70,16 @@ quint32 QHotkeyPrivateX11::nativeKeycode(Qt::Key keycode)
 	}
 
 	Display *display = QX11Info::display();
-	if(display)
-		return XKeysymToKeycode(QX11Info::display(), keysym);
-	else
+	if(display) {
+		auto res = XKeysymToKeycode(QX11Info::display(), keysym);
+		if(res != 0)
+			ok = true;
+		return res;
+	} else
 		return 0;
 }
 
-quint32 QHotkeyPrivateX11::nativeModifiers(Qt::KeyboardModifiers modifiers)
+quint32 QHotkeyPrivateX11::nativeModifiers(Qt::KeyboardModifiers modifiers, bool &ok)
 {
 	quint32 nMods = 0;
 	if (modifiers & Qt::ShiftModifier)
@@ -87,6 +90,7 @@ quint32 QHotkeyPrivateX11::nativeModifiers(Qt::KeyboardModifiers modifiers)
 		nMods |= Mod1Mask;
 	if (modifiers & Qt::MetaModifier)
 		nMods |= Mod4Mask;
+	ok = true;
 	return nMods;
 }
 

@@ -279,7 +279,13 @@ bool QHotkeyPrivate::removeShortcutInvoked(QHotkey *hotkey)
 
 QHotkey::NativeShortcut QHotkeyPrivate::nativeShortcutInvoked(Qt::Key keycode, Qt::KeyboardModifiers modifiers)
 {
-	return {this->nativeKeycode(keycode), this->nativeModifiers(modifiers)};
+	bool ok1, ok2 = false;
+	auto k = nativeKeycode(keycode, ok1);
+	auto m = nativeModifiers(modifiers, ok2);
+	if(ok1 && ok2)
+		return {k, m};
+	else
+		return {};
 }
 
 

@@ -25,8 +25,8 @@ public:
 protected:
 	void activateShortcut(QHotkey::NativeShortcut shortcut);
 
-	virtual quint32 nativeKeycode(Qt::Key keycode) = 0;//platform implement
-	virtual quint32 nativeModifiers(Qt::KeyboardModifiers modifiers) = 0;//platform implement
+	virtual quint32 nativeKeycode(Qt::Key keycode, bool &ok) = 0;//platform implement
+	virtual quint32 nativeModifiers(Qt::KeyboardModifiers modifiers, bool &ok) = 0;//platform implement
 
 	virtual bool registerShortcut(QHotkey::NativeShortcut shortcut) = 0;//platform implement
 	virtual bool unregisterShortcut(QHotkey::NativeShortcut shortcut) = 0;//platform implement

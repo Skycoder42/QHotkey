@@ -13,8 +13,8 @@ public:
 
 protected:
 	// QHotkeyPrivate interface
-	quint32 nativeKeycode(Qt::Key keycode) Q_DECL_OVERRIDE;
-	quint32 nativeModifiers(Qt::KeyboardModifiers modifiers) Q_DECL_OVERRIDE;
+	quint32 nativeKeycode(Qt::Key keycode, bool &ok) Q_DECL_OVERRIDE;
+	quint32 nativeModifiers(Qt::KeyboardModifiers modifiers, bool &ok) Q_DECL_OVERRIDE;
 	bool registerShortcut(QHotkey::NativeShortcut shortcut) Q_DECL_OVERRIDE;
 	bool unregisterShortcut(QHotkey::NativeShortcut shortcut) Q_DECL_OVERRIDE;
 
@@ -35,8 +35,9 @@ bool QHotkeyPrivateWin::nativeEventFilter(const QByteArray &eventType, void *mes
 	return false;
 }
 
-quint32 QHotkeyPrivateWin::nativeKeycode(Qt::Key keycode)
+quint32 QHotkeyPrivateWin::nativeKeycode(Qt::Key keycode, bool &ok)
 {
+	ok = true;
 	if(keycode <= 0xFFFF) {//Try to obtain the key from it's "character"
 		const SHORT vKey = VkKeyScanW(keycode);
 		if(vKey > -1)
@@ -201,11 +202,12 @@ quint32 QHotkeyPrivateWin::nativeKeycode(Qt::Key keycode)
 		return VK_OEM_FJ_TOUROKU;
 
 	default:
+		ok = false;
 		return 0;
 	}
 }
 
-quint32 QHotkeyPrivateWin::nativeModifiers(Qt::KeyboardModifiers modifiers)
+quint32 QHotkeyPrivateWin::nativeModifiers(Qt::KeyboardModifiers modifiers, bool &ok)
 {
 	quint32 nMods = 0;
 	if (modifiers & Qt::ShiftModifier)
@@ -216,6 +218,7 @@ quint32 QHotkeyPrivateWin::nativeModifiers(Qt::KeyboardModifiers modifiers)
 		nMods |= MOD_ALT;
 	if (modifiers & Qt::MetaModifier)
 		nMods |= MOD_WIN;
+	ok = true;
 	return nMods;
 }
 

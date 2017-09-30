@@ -13,8 +13,8 @@ public:
 
 protected:
 	// QHotkeyPrivate interface
-	quint32 nativeKeycode(Qt::Key keycode) Q_DECL_OVERRIDE;
-	quint32 nativeModifiers(Qt::KeyboardModifiers modifiers) Q_DECL_OVERRIDE;
+	quint32 nativeKeycode(Qt::Key keycode, bool &ok) Q_DECL_OVERRIDE;
+	quint32 nativeModifiers(Qt::KeyboardModifiers modifiers, bool &ok) Q_DECL_OVERRIDE;
 	bool registerShortcut(QHotkey::NativeShortcut shortcut) Q_DECL_OVERRIDE;
 	bool unregisterShortcut(QHotkey::NativeShortcut shortcut) Q_DECL_OVERRIDE;
 
@@ -35,9 +35,10 @@ bool QHotkeyPrivateMac::nativeEventFilter(const QByteArray &eventType, void *mes
 	return false;
 }
 
-quint32 QHotkeyPrivateMac::nativeKeycode(Qt::Key keycode)
+quint32 QHotkeyPrivateMac::nativeKeycode(Qt::Key keycode, bool &ok)
 {
 	// Constants found in NSEvent.h from AppKit.framework
+	ok = true;
 	switch (keycode) {
 	case Qt::Key_Return:
 		return kVK_Return;
@@ -120,7 +121,8 @@ quint32 QHotkeyPrivateMac::nativeKeycode(Qt::Key keycode)
 	case Qt::Key_Up:
 		return kVK_UpArrow;
 	default:
-		;
+		ok = false;
+		break;
 	}
 
 	UTF16Char ch = keycode;
@@ -157,11 +159,17 @@ quint32 QHotkeyPrivateMac::nativeKeycode(Qt::Key keycode)
 					long idx = keyToChar[k] & kUCKeyOutputGetIndexMask;
 					if (stateRec && idx < stateRec->keyStateRecordCount) {
 						UCKeyStateRecord* rec = reinterpret_cast<UCKeyStateRecord*>(data + stateRec->keyStateRecordOffsets[idx]);
-						if (rec->stateZeroCharData == ch) return k;
+						if (rec->stateZeroCharData == ch) {
+							ok = true;
+							return k;
+						}
 					}
 				}
 				else if (!(keyToChar[k] & kUCKeyOutputSequenceIndexMask) && keyToChar[k] < 0xFFFE) {
-					if (keyToChar[k] == ch) return k;
+					if (keyToChar[k] == ch) {
+						ok = true;
+						return k;
+					}
 				}
 			}
 		}
@@ -169,7 +177,7 @@ quint32 QHotkeyPrivateMac::nativeKeycode(Qt::Key keycode)
 	return 0;
 }
 
-quint32 QHotkeyPrivateMac::nativeModifiers(Qt::KeyboardModifiers modifiers)
+quint32 QHotkeyPrivateMac::nativeModifiers(Qt::KeyboardModifiers modifiers, bool &ok)
 {
 	quint32 nMods = 0;
 	if (modifiers & Qt::ShiftModifier)
@@ -182,6 +190,7 @@ quint32 QHotkeyPrivateMac::nativeModifiers(Qt::KeyboardModifiers modifiers)
 		nMods |= controlKey;
 	if (modifiers & Qt::KeypadModifier)
 		nMods |= kEventKeyModifierNumLockMask;
+	ok = true;
 	return nMods;
 }
 
