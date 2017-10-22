@@ -1,7 +1,8 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-	HotkeyTest
+	HotkeyTest \
+    QHotkey
 
 DISTFILES += README.md \
 	LICENSE \
