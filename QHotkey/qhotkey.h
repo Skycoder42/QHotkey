@@ -6,8 +6,18 @@
 #include <QPair>
 #include <QLoggingCategory>
 
+#ifdef QHOTKEY_LIB
+	#ifdef QHOTKEY_LIB_BUILD
+		#define QHOTKEY_SHARED_EXPORT Q_DECL_EXPORT
+	#else
+		#define QHOTKEY_SHARED_EXPORT Q_DECL_IMPORT
+	#endif
+#else
+	#define QHOTKEY_SHARED_EXPORT
+#endif
+
 //! A class to define global, systemwide Hotkeys
-class QHotkey : public QObject
+class QHOTKEY_SHARED_EXPORT QHotkey : public QObject
 {
 	Q_OBJECT
 	friend class QHotkeyPrivate;
@@ -19,7 +29,7 @@ class QHotkey : public QObject
 
 public:
 	//! Defines shortcut with native keycodes
-	class NativeShortcut {
+	class QHOTKEY_SHARED_EXPORT NativeShortcut {
 	public:
 		//! The native keycode
 		quint32 key;
@@ -95,9 +105,9 @@ private:
 	bool _registered;
 };
 
-uint qHash(const QHotkey::NativeShortcut &key);
-uint qHash(const QHotkey::NativeShortcut &key, uint seed);
+uint QHOTKEY_SHARED_EXPORT qHash(const QHotkey::NativeShortcut &key);
+uint QHOTKEY_SHARED_EXPORT qHash(const QHotkey::NativeShortcut &key, uint seed);
 
-Q_DECLARE_LOGGING_CATEGORY(logQHotkey)
+QHOTKEY_SHARED_EXPORT Q_DECLARE_LOGGING_CATEGORY(logQHotkey)
 
 #endif // QHOTKEY_H

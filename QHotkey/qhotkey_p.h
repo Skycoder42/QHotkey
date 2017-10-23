@@ -7,7 +7,7 @@
 #include <QMutex>
 #include <QGlobalStatic>
 
-class QHotkeyPrivate : public QObject, public QAbstractNativeEventFilter
+class QHOTKEY_SHARED_EXPORT QHotkeyPrivate : public QObject, public QAbstractNativeEventFilter
 {
 	Q_OBJECT
 

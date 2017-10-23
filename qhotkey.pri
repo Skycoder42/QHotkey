@@ -1,6 +1,7 @@
 CONFIG += C++11
 
-PUBLIC_HEADERS += $$PWD/QHotkey/qhotkey.h
+PUBLIC_HEADERS += $$PWD/QHotkey/qhotkey.h \
+	$$PWD/QHotkey/QHotkey
 
 HEADERS += $$PUBLIC_HEADERS \
 	$$PWD/QHotkey/qhotkey_p.h
