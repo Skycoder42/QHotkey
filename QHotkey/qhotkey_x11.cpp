@@ -6,6 +6,11 @@
 #include <X11/Xlib.h>
 #include <xcb/xcb.h>
 
+//compability to pre Qt 5.8
+#ifndef Q_FALLTHROUGH
+#define Q_FALLTHROUGH() (void)0
+#endif
+
 class QHotkeyPrivateX11 : public QHotkeyPrivate
 {
 public:
