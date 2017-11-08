@@ -182,6 +182,7 @@ int QHotkeyPrivateX11::HotkeyErrorHandler::handleError(Display *display, XErrorE
 			errorString = QHotkeyPrivateX11::formatX11Error(display, error->error_code);
 			return 1;
 		}
+		Q_FALLTHROUGH();
 		// fall through
 	default:
 		return 0;
