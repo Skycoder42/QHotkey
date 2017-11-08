@@ -172,8 +172,6 @@ QHotkeyPrivateX11::HotkeyErrorHandler::~HotkeyErrorHandler()
 
 int QHotkeyPrivateX11::HotkeyErrorHandler::handleError(Display *display, XErrorEvent *error)
 {
-QT_WARNING_PUSH
-QT_WARNING_DISABLE_GCC("-Wimplicit-fallthrough")
 	switch (error->error_code) {
 	case BadAccess:
 	case BadValue:
@@ -184,8 +182,9 @@ QT_WARNING_DISABLE_GCC("-Wimplicit-fallthrough")
 			errorString = QHotkeyPrivateX11::formatX11Error(display, error->error_code);
 			return 1;
 		}
+		Q_FALLTHROUGH();
+		// fall through
 	default:
 		return 0;
 	}
-QT_WARNING_POP
 }
