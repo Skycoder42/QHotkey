@@ -21,6 +21,7 @@ protected:
 	// QHotkeyPrivate interface
 	quint32 nativeKeycode(Qt::Key keycode, bool &ok) Q_DECL_OVERRIDE;
 	quint32 nativeModifiers(Qt::KeyboardModifiers modifiers, bool &ok) Q_DECL_OVERRIDE;
+	QString getX11String(Qt::Key keycode);
 	bool registerShortcut(QHotkey::NativeShortcut shortcut) Q_DECL_OVERRIDE;
 	bool unregisterShortcut(QHotkey::NativeShortcut shortcut) Q_DECL_OVERRIDE;
 
@@ -63,9 +64,33 @@ bool QHotkeyPrivateX11::nativeEventFilter(const QByteArray &eventType, void *mes
 	return false;
 }
 
+QString QHotkeyPrivateX11::getX11String(Qt::Key keycode)
+{
+	switch(keycode){
+
+		case Qt::Key_MediaLast : 
+		case Qt::Key_MediaPrevious : 
+			return "XF86AudioPrev";
+		case Qt::Key_MediaNext : 
+			return "XF86AudioNext";
+		case Qt::Key_MediaPause : 
+		case Qt::Key_MediaPlay : 
+		case Qt::Key_MediaTogglePlayPause :
+			return "XF86AudioPlay";
+		case Qt::Key_MediaRecord :
+			return "XF86AudioRecord"; 
+		case Qt::Key_MediaStop : 
+			return "XF86AudioStop";
+		default :
+			return QKeySequence(keycode).toString(QKeySequence::NativeText);
+	}
+}
+
 quint32 QHotkeyPrivateX11::nativeKeycode(Qt::Key keycode, bool &ok)
 {
-	KeySym keysym = XStringToKeysym(QKeySequence(keycode).toString(QKeySequence::NativeText).toLatin1().constData());
+	QString keyString = getX11String(keycode);
+
+	KeySym keysym = XStringToKeysym(keyString.toLatin1().constData());
 	if (keysym == NoSymbol) {
 		//not found -> just use the key
 		if(keycode <= 0xFFFF)
