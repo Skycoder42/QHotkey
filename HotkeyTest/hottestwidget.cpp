@@ -1,6 +1,8 @@
 #include "hottestwidget.h"
 #include "ui_hottestwidget.h"
 
+//#define TEST_MAPPING
+
 HotTestWidget::HotTestWidget(QWidget *parent) :
 	QWidget(parent),
 	ui(new Ui::HotTestWidget),
@@ -17,6 +19,11 @@ HotTestWidget::HotTestWidget(QWidget *parent) :
 	ui->setupUi(this);
 	this->thread4->start();
 	this->thread5->start();
+
+#ifdef TEST_MAPPING
+	//shortcut mapping override
+	QHotkey::addGlobalMapping(QKeySequence("X"), QHotkey::NativeShortcut());// add invalid mapping to test if the overwrite works for all platforms
+#endif
 
 	//1
 	connect(this->ui->hotkeyCheckbox_1, &QCheckBox::toggled,

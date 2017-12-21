@@ -32,8 +32,10 @@ protected:
 	virtual bool unregisterShortcut(QHotkey::NativeShortcut shortcut) = 0;//platform implement
 
 private:
+	QHash<QPair<Qt::Key, Qt::KeyboardModifiers>, QHotkey::NativeShortcut> mapping;
 	QMultiHash<QHotkey::NativeShortcut, QHotkey*> shortcuts;
 
+	Q_INVOKABLE void addMappingInvoked(Qt::Key keycode, Qt::KeyboardModifiers modifiers, const QHotkey::NativeShortcut &nativeShortcut);
 	Q_INVOKABLE bool addShortcutInvoked(QHotkey *hotkey);
 	Q_INVOKABLE bool removeShortcutInvoked(QHotkey *hotkey);
 	Q_INVOKABLE QHotkey::NativeShortcut nativeShortcutInvoked(Qt::Key keycode, Qt::KeyboardModifiers modifiers);
@@ -46,5 +48,8 @@ private:
 	{\
 		return hotkeyPrivate;\
 	}
+
+Q_DECLARE_METATYPE(Qt::Key)
+Q_DECLARE_METATYPE(Qt::KeyboardModifiers)
 
 #endif // QHOTKEY_P_H

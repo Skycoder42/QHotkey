@@ -8,6 +8,14 @@
 
 Q_LOGGING_CATEGORY(logQHotkey, "QHotkey")
 
+void QHotkey::addGlobalMapping(const QKeySequence &shortcut, const QHotkey::NativeShortcut &nativeShortcut)
+{
+	QMetaObject::invokeMethod(QHotkeyPrivate::instance(), "addMappingInvoked", Qt::QueuedConnection,
+							  Q_ARG(Qt::Key, Qt::Key(shortcut[0] & ~Qt::KeyboardModifierMask)),
+							  Q_ARG(Qt::KeyboardModifiers, Qt::KeyboardModifiers(shortcut[0] & Qt::KeyboardModifierMask)),
+							  Q_ARG(QHotkey::NativeShortcut, nativeShortcut));
+}
+
 QHotkey::QHotkey(QObject *parent) :
 	QObject(parent),
 	_keyCode(Qt::Key_unknown),
@@ -249,6 +257,11 @@ void QHotkeyPrivate::activateShortcut(QHotkey::NativeShortcut shortcut)
 		signal.invoke(hkey, Qt::QueuedConnection);
 }
 
+void QHotkeyPrivate::addMappingInvoked(Qt::Key keycode, Qt::KeyboardModifiers modifiers, const QHotkey::NativeShortcut &nativeShortcut)
+{
+	mapping.insert({keycode, modifiers}, nativeShortcut);
+}
+
 bool QHotkeyPrivate::addShortcutInvoked(QHotkey *hotkey)
 {
 	QHotkey::NativeShortcut shortcut = hotkey->_nativeShortcut;
@@ -279,6 +292,9 @@ bool QHotkeyPrivate::removeShortcutInvoked(QHotkey *hotkey)
 
 QHotkey::NativeShortcut QHotkeyPrivate::nativeShortcutInvoked(Qt::Key keycode, Qt::KeyboardModifiers modifiers)
 {
+	if(mapping.contains({keycode, modifiers}))
+		return mapping.value({keycode, modifiers});
+
 	bool ok1, ok2 = false;
 	auto k = nativeKeycode(keycode, ok1);
 	auto m = nativeModifiers(modifiers, ok2);

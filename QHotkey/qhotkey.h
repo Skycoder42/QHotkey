@@ -53,6 +53,8 @@ public:
 		bool valid;
 	};
 
+	static void addGlobalMapping(const QKeySequence &shortcut, const NativeShortcut &nativeShortcut);
+
 	//! Constructor
 	explicit QHotkey(QObject *parent = Q_NULLPTR);
 	//! Constructs a hotkey with a shortcut and optionally registers it
@@ -109,5 +111,7 @@ uint QHOTKEY_SHARED_EXPORT qHash(const QHotkey::NativeShortcut &key);
 uint QHOTKEY_SHARED_EXPORT qHash(const QHotkey::NativeShortcut &key, uint seed);
 
 QHOTKEY_SHARED_EXPORT Q_DECLARE_LOGGING_CATEGORY(logQHotkey)
+
+Q_DECLARE_METATYPE(QHotkey::NativeShortcut)
 
 #endif // QHOTKEY_H
