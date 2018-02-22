@@ -12,6 +12,8 @@ The QHotkey is a class that can be used to create hotkeys/global shortcuts, aka 
 - Thread-Safe - Can be used on all threads (See section Thread safety)
 - Allows usage of native keycodes and modifiers, if needed
 
+**Note:** For now Wayland is not supported, as it is simply not possible to register a global shortcut with wayland. For more details, or possible Ideas on how to get Hotkeys working on wayland, see [Issue #14](https://github.com/Skycoder42/QHotkey/issues/14).
+
 ## Installation
 The package is providet as qpm package, [`de.skycoder42.qhotkey`](https://www.qpm.io/packages/de.skycoder42.qhotkey/index.html). To install:
 
