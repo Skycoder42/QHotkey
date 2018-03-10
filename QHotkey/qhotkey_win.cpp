@@ -202,8 +202,12 @@ quint32 QHotkeyPrivateWin::nativeKeycode(Qt::Key keycode, bool &ok)
 		return VK_OEM_FJ_TOUROKU;
 
 	default:
-		ok = false;
-		return 0;
+		if(keycode <= 0xFFFF)
+			return (byte)keycode;
+		else {
+			ok = false;
+			return 0;
+		}
 	}
 }
 
