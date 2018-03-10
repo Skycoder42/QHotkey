@@ -15,7 +15,16 @@ The QHotkey is a class that can be used to create hotkeys/global shortcuts, aka 
 **Note:** For now Wayland is not supported, as it is simply not possible to register a global shortcut with wayland. For more details, or possible Ideas on how to get Hotkeys working on wayland, see [Issue #14](https://github.com/Skycoder42/QHotkey/issues/14).
 
 ## Installation
-The package is providet as qpm package, [`de.skycoder42.qhotkey`](https://www.qpm.io/packages/de.skycoder42.qhotkey/index.html). To install:
+The package is providet as qpm  package, [`de.skycoder42.qhotkey`](https://www.qpm.io/packages/de.skycoder42.qhotkey/index.html). You can install it either via qpmx (preferred) or directly via qpm.
+
+### Via qpmx
+[qpmx](https://github.com/Skycoder42/qpmx) is a frontend for qpm (and other tools) with additional features, and is the preferred way to install packages. To use it:
+
+1. Install qpmx (See [GitHub - Installation](https://github.com/Skycoder42/qpmx#installation))
+2. Install qpm (See [GitHub - Installing](https://github.com/Cutehacks/qpm/blob/master/README.md#installing), for **windows** see below)
+3. In your projects root directory, run `qpmx install de.skycoder42.qhotkey`
+
+### Via qpm
 
 1. Install qpm (See [GitHub - Installing](https://github.com/Cutehacks/qpm/blob/master/README.md#installing), for **windows** see below)
 2. In your projects root directory, run `qpm install de.skycoder42.qhotkey`
@@ -39,17 +48,17 @@ The following example shows a simple application that will run without a window 
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+	QApplication a(argc, argv);
 
-    QHotkey hotkey(QKeySequence("ctrl+alt+Q"), true);//The hotkey will be automatically registered
-    qDebug() << "Is Registered: " << hotkey.isRegistered();
+	auto hotkey = new QHotkey(QKeySequence("ctrl+alt+Q"), true, &a);//The hotkey will be automatically registered
+	qDebug() << "Is Registered: " << hotkey->isRegistered();
 
-    QObject::connect(&hotkey, &QHotkey::activated, qApp, [&](){
-        qDebug() << "Hotkey Activated - the application will quit now";
-        qApp->quit();
-    });
+	QObject::connect(hotkey, &QHotkey::activated, qApp, [&](){
+		qDebug() << "Hotkey Activated - the application will quit now";
+		qApp->quit();
+	});
 
-    return a.exec();
+	return a.exec();
 }
 ```
 
@@ -60,7 +69,7 @@ By running the example in `./HotkeyTest` you can test out the QHotkey class. The
 - **Playground:** You can enter some sequences here and try it out with different key combinations.
 - **Testings:** A list of selected hotkeys. Activate it and try out which ones work for you (*Hint:* Depending on OS and keyboard layout, it's very possible that a few don't work).
 - **Threading:** Activate the checkbox to move 2 Hotkeys of the playground to seperate threads. It should work without a difference.
-- **Native Shortcut**: Allows you to try out the direct usage of native shortcuts 
+- **Native Shortcut**: Allows you to try out the direct usage of native shortcuts
 
 ### Logging
 By default, QHotkey prints some warning messages if something goes wrong (For example, a key that cannot be translated). All messages of QHotkey are grouped into the [QLoggingCategory](https://doc.qt.io/qt-5/qloggingcategory.html) `"QHotkey"`. If you want to simply disable the logging, call the folling function somewhere in your code:
@@ -83,7 +92,7 @@ The documentation was created using [doxygen](http://www.doxygen.org). It includ
 
 ## Technical
 ### Requirements
- - I built it with Qt 5.7, but may work with earlier versions, too
+ - Explicit support is only given down to the latest Qt LTS, but may work with earlier versions, too
  - At least the QtGui-Module (a QGuiApplication). Hotkeys on console based applications are not supported (By the operating systems). You can however create a gui application without any visible window.
  - C++11
 

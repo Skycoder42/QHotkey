@@ -20,6 +20,7 @@
 class QHOTKEY_SHARED_EXPORT QHotkey : public QObject
 {
 	Q_OBJECT
+	//! @private
 	friend class QHotkeyPrivate;
 
 	//! Specifies whether this hotkey is currently registered or not
@@ -53,40 +54,40 @@ public:
 		bool valid;
 	};
 
+	//! Adds a global mapping of a key sequence to a replacement native shortcut
 	static void addGlobalMapping(const QKeySequence &shortcut, const NativeShortcut &nativeShortcut);
 
-	//! Constructor
-	explicit QHotkey(QObject *parent = Q_NULLPTR);
+	//! Default Constructor
+	explicit QHotkey(QObject *parent = nullptr);
 	//! Constructs a hotkey with a shortcut and optionally registers it
-	explicit QHotkey(const QKeySequence &shortcut, bool autoRegister = false, QObject *parent = Q_NULLPTR);
+	explicit QHotkey(const QKeySequence &shortcut, bool autoRegister = false, QObject *parent = nullptr);
 	//! Constructs a hotkey with a key and modifiers and optionally registers it
-	explicit QHotkey(Qt::Key keyCode, Qt::KeyboardModifiers modifiers, bool autoRegister = false, QObject *parent = Q_NULLPTR);
+	explicit QHotkey(Qt::Key keyCode, Qt::KeyboardModifiers modifiers, bool autoRegister = false, QObject *parent = nullptr);
 	//! Constructs a hotkey from a native shortcut and optionally registers it
-	explicit QHotkey(const NativeShortcut &shortcut, bool autoRegister = false, QObject *parent = Q_NULLPTR);
-	//! Destructor
+	explicit QHotkey(const NativeShortcut &shortcut, bool autoRegister = false, QObject *parent = nullptr);
 	~QHotkey();
 
-	//! READ-Accessor for QHotkey::registered
+	//! @readAcFn{QHotkey::registered}
 	bool isRegistered() const;
-	//! READ-Accessor for QHotkey::shortcut - the key and modifiers as a QKeySequence
+	//! @readAcFn{QHotkey::shortcut}
 	QKeySequence shortcut() const;
-	//! READ-Accessor for QHotkey::shortcut - the key only
+	//! @readAcFn{QHotkey::shortcut} - the key only
 	Qt::Key keyCode() const;
-	//! READ-Accessor for QHotkey::shortcut - the modifiers only
+	//! @readAcFn{QHotkey::shortcut} - the modifiers only
 	Qt::KeyboardModifiers modifiers() const;
 
 	//! Get the current native shortcut
 	NativeShortcut currentNativeShortcut() const;
 
 public slots:
-	//! WRITE-Accessor for QHotkey::registered
+	//! @writeAcFn{QHotkey::registered}
 	bool setRegistered(bool registered);
 
-	//! WRITE-Accessor for QHotkey::shortcut
+	//! @writeAcFn{QHotkey::shortcut}
 	bool setShortcut(const QKeySequence &shortcut, bool autoRegister = false);
-	//! WRITE-Accessor for QHotkey::shortcut
+	//! @writeAcFn{QHotkey::shortcut}
 	bool setShortcut(Qt::Key keyCode, Qt::KeyboardModifiers modifiers, bool autoRegister = false);
-	//! RESET-Accessor for QHotkey::shortcut
+	//! @resetAcFn{QHotkey::shortcut}
 	bool resetShortcut();
 
 	//! Set this hotkey to a native shortcut
@@ -96,7 +97,7 @@ signals:
 	//! Will be emitted if the shortcut is pressed
 	void activated(QPrivateSignal);
 
-	//! NOTIFY-Accessor for QHotkey::registered
+	//! @notifyAcFn{QHotkey::registered}
 	void registeredChanged(bool registered);
 
 private:

@@ -22,9 +22,9 @@ thread until the applications eventloop has the time to handle it. If the loop i
 it does. This does not happen if used from the main thread.
 
 @accessors{
- @readAc{isRegistered()}
- @writeAc{setRegistered()}
- @notifyAc{registeredChanged()}
+	@readAc{isRegistered()}
+	@writeAc{setRegistered()}
+	@notifyAc{registeredChanged()}
 }
 
 In addition to the normal accessors, a modification of the QHotkey::shortcut property can change this property, too.
@@ -49,15 +49,15 @@ thread until the applications eventloop has the time to handle it. If the loop i
 it does. This does not happen if used from the main thread.
 
 @accessors{
- @readAc{
-  <b>shortcut()</b><br/>
-  keyCode()<br/>
-  modifiers()
- }
- @writeAc{
-  <b>setShortcut(const QKeySequence &, bool)</b><br/>
-  setShortcut(Qt::Key, Qt::KeyboardModifiers, bool)
- }
+	@readAc{
+		<b>shortcut()</b><br/>
+		keyCode()<br/>
+		modifiers()
+	}
+	@writeAc{
+		<b>setShortcut(const QKeySequence &, bool)</b><br/>
+		setShortcut(Qt::Key, Qt::KeyboardModifiers, bool)
+	}
 }
 
 @sa QHotkey::registered, QHotkey::isKeyCaptured, QHotkey::currentNativeShortcut, QHotkey::setNativeShortcut
@@ -66,31 +66,15 @@ it does. This does not happen if used from the main thread.
 /*!
 @fn QHotkey::QHotkey(QObject *)
 
-@overload
 @param parent The parent object
-
-@overloads{
- @povElem{QHotkey::QHotkey(QObject *)}
- @ovElem{QHotkey::QHotkey(const QKeySequence &, bool, QObject *)}
- @ovElem{QHotkey::QHotkey(Qt::Key, Qt::KeyboardModifiers, bool, QObject *)}
- @ovElem{QHotkey::QHotkey(const NativeShortcut &, bool, QObject *)}
-}
 */
 
 /*!
 @fn QHotkey::QHotkey(const QKeySequence &, bool, QObject *)
 
-@overload
 @param parent The parent object
 @param shortcut The shortcut this hotkey should be registered for
 @param autoRegister Specifies, whether the hotkey should be automatically registered or not
-
-@overloads{
- @povElem{QHotkey::QHotkey(QObject *)}
- @ovElem{QHotkey::QHotkey(const QKeySequence &, bool, QObject *)}
- @ovElem{QHotkey::QHotkey(Qt::Key, Qt::KeyboardModifiers, bool, QObject *)}
- @ovElem{QHotkey::QHotkey(const NativeShortcut &, bool, QObject *)}
-}
 
 @sa QHotkey::shortcut, QHotkey::registered
 */
@@ -98,18 +82,10 @@ it does. This does not happen if used from the main thread.
 /*!
 @fn QHotkey::QHotkey(Qt::Key, Qt::KeyboardModifiers, bool, QObject *)
 
-@overload
 @param parent The parent object
-@param key The key this hotkey should be registered for
+@param keyCode The key this hotkey should be registered for
 @param modifiers The modifiers that have to be pressed together with the `key`
 @param autoRegister Specifies, whether the hotkey should be automatically registered or not
-
-@overloads{
- @povElem{QHotkey::QHotkey(QObject *)}
- @ovElem{QHotkey::QHotkey(const QKeySequence &, bool, QObject *)}
- @ovElem{QHotkey::QHotkey(Qt::Key, Qt::KeyboardModifiers, bool, QObject *)}
- @ovElem{QHotkey::QHotkey(const NativeShortcut &, bool, QObject *)}
-}
 
 @sa QHotkey::shortcut, QHotkey::registered
 */
@@ -117,19 +93,11 @@ it does. This does not happen if used from the main thread.
 /*!
 @fn QHotkey::QHotkey(const NativeShortcut &, bool, QObject *)
 
-@overload
 @param parent The parent object
 @param shortcut The native shortcut this hotkey should be registered for
 @param autoRegister Specifies, whether the hotkey should be automatically registered or not
 
 @note Please check QHotkey::setNativeShortcut for important hints!
-
-@overloads{
- @povElem{QHotkey::QHotkey(QObject *)}
- @ovElem{QHotkey::QHotkey(const QKeySequence &, bool, QObject *)}
- @ovElem{QHotkey::QHotkey(Qt::Key, Qt::KeyboardModifiers, bool, QObject *)}
- @ovElem{QHotkey::QHotkey(const NativeShortcut &, bool, QObject *)}
-}
 
 @sa QHotkey::setNativeShortcut, QHotkey::registered
 */
@@ -166,6 +134,22 @@ This signal can only be emitted if Hotkey::registered is set to true (with a val
 from the thread this instance lives on.
 
 @note This is a private signal. It can be used in signal connections but cannot be emitted by the user.
+*/
+
+/*!
+@fn QHotkey::addGlobalMapping
+
+@param shortcut The keysequence to add the mapping for
+@param nativeShortcut The native shortcut to overwrite the sequence with
+
+This method can be used to remap specific hotkey to a different native representation than the
+one that would be used by default. This can be useful if specific key combinations work fine
+on allmost all platforms, but on one you need a different keycode for the same effect. See
+[Issue #15](https://github.com/Skycoder42/QHotkey/issues/15) for an example where this is the
+case.
+
+The advantage of using this approach via simply registering it as native key directly, is that
+these mappings work for cases where users input their own hotkeys.
 */
 
 /*!
