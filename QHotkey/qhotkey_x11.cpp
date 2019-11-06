@@ -99,8 +99,7 @@ quint32 QHotkeyPrivateX11::nativeKeycode(Qt::Key keycode, bool &ok)
 			return 0;
 	}
 
-	Display *display = QX11Info::display();
-	if(display) {
+	if(QX11Info::isPlatformX11()) {
 		auto res = XKeysymToKeycode(QX11Info::display(), keysym);
 		if(res != 0)
 			ok = true;
