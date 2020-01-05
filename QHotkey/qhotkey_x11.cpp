@@ -56,8 +56,8 @@ const quint32 QHotkeyPrivateX11::validModsMask = ShiftMask | ControlMask | Mod1M
 
 bool QHotkeyPrivateX11::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
 {
-	Q_UNUSED(eventType);
-	Q_UNUSED(result);
+	Q_UNUSED(eventType)
+	Q_UNUSED(result)
 
 	xcb_generic_event_t *genericEvent = static_cast<xcb_generic_event_t *>(message);
 	if (genericEvent->response_type == XCB_KEY_PRESS) {
