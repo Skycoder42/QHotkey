@@ -23,6 +23,10 @@ private:
 	static QHash<QHotkey::NativeShortcut, EventHotKeyRef> hotkeyRefs;
 };
 NATIVE_INSTANCE(QHotkeyPrivateMac)
+bool QHotkeyPrivate::isPlatformSupported()
+{
+	return true;
+}
 
 bool QHotkeyPrivateMac::isHotkeyHandlerRegistered = false;
 QHash<QHotkey::NativeShortcut, EventHotKeyRef> QHotkeyPrivateMac::hotkeyRefs;

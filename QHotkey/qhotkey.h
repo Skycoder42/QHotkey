@@ -57,6 +57,9 @@ public:
 	//! Adds a global mapping of a key sequence to a replacement native shortcut
 	static void addGlobalMapping(const QKeySequence &shortcut, const NativeShortcut &nativeShortcut);
 
+	//! Checks if global shortcuts are supported by the current platform
+	static bool isPlatformSupported();
+
 	//! Default Constructor
 	explicit QHotkey(QObject *parent = nullptr);
 	//! Constructs a hotkey with a shortcut and optionally registers it

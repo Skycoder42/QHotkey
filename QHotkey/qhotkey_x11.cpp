@@ -46,6 +46,10 @@ private:
 	};
 };
 NATIVE_INSTANCE(QHotkeyPrivateX11)
+bool QHotkeyPrivate::isPlatformSupported()
+{
+	return QX11Info::isPlatformX11();
+}
 
 const QVector<quint32> QHotkeyPrivateX11::specialModifiers = {0, Mod2Mask, LockMask, (Mod2Mask | LockMask)};
 const quint32 QHotkeyPrivateX11::validModsMask = ShiftMask | ControlMask | Mod1Mask | Mod4Mask;

@@ -22,6 +22,10 @@ private:
 	static QString formatWinError(DWORD winError);
 };
 NATIVE_INSTANCE(QHotkeyPrivateWin)
+bool QHotkeyPrivate::isPlatformSupported()
+{
+	return true;
+}
 
 bool QHotkeyPrivateWin::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
 {
