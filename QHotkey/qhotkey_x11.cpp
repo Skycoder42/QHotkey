@@ -46,6 +46,7 @@ private:
 	};
 };
 NATIVE_INSTANCE(QHotkeyPrivateX11)
+
 bool QHotkeyPrivate::isPlatformSupported()
 {
 	return QX11Info::isPlatformX11();

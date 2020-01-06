@@ -22,6 +22,7 @@ private:
 	static QString formatWinError(DWORD winError);
 };
 NATIVE_INSTANCE(QHotkeyPrivateWin)
+
 bool QHotkeyPrivate::isPlatformSupported()
 {
 	return true;
