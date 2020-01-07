@@ -24,14 +24,19 @@ private:
 };
 NATIVE_INSTANCE(QHotkeyPrivateMac)
 
+bool QHotkeyPrivate::isPlatformSupported()
+{
+	return true;
+}
+
 bool QHotkeyPrivateMac::isHotkeyHandlerRegistered = false;
 QHash<QHotkey::NativeShortcut, EventHotKeyRef> QHotkeyPrivateMac::hotkeyRefs;
 
 bool QHotkeyPrivateMac::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
 {
-	Q_UNUSED(eventType);
-	Q_UNUSED(message);
-	Q_UNUSED(result);
+	Q_UNUSED(eventType)
+	Q_UNUSED(message)
+	Q_UNUSED(result)
 	return false;
 }
 

@@ -16,6 +16,11 @@ void QHotkey::addGlobalMapping(const QKeySequence &shortcut, const QHotkey::Nati
 							  Q_ARG(QHotkey::NativeShortcut, nativeShortcut));
 }
 
+bool QHotkey::isPlatformSupported()
+{
+	return QHotkeyPrivate::isPlatformSupported();
+}
+
 QHotkey::QHotkey(QObject *parent) :
 	QObject(parent),
 	_keyCode(Qt::Key_unknown),

@@ -16,6 +16,7 @@ public:
 	~QHotkeyPrivate();
 
 	static QHotkeyPrivate *instance();
+	static bool isPlatformSupported();
 
 	QHotkey::NativeShortcut nativeShortcut(Qt::Key keycode, Qt::KeyboardModifiers modifiers);
 
