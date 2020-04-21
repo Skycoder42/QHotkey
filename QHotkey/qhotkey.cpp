@@ -262,6 +262,13 @@ void QHotkeyPrivate::activateShortcut(QHotkey::NativeShortcut shortcut)
 		signal.invoke(hkey, Qt::QueuedConnection);
 }
 
+void QHotkeyPrivate::releaseShortcut(QHotkey::NativeShortcut shortcut)
+{
+       QMetaMethod signal = QMetaMethod::fromSignal(&QHotkey::released);
+       for(QHotkey *hkey : shortcuts.values(shortcut))
+               signal.invoke(hkey, Qt::QueuedConnection);
+}
+
 void QHotkeyPrivate::addMappingInvoked(Qt::Key keycode, Qt::KeyboardModifiers modifiers, const QHotkey::NativeShortcut &nativeShortcut)
 {
 	mapping.insert({keycode, modifiers}, nativeShortcut);
