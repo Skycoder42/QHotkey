@@ -29,7 +29,10 @@ protected:
 private:
 	static const QVector<quint32> specialModifiers;
 	static const quint32 validModsMask;
-
+	XErrorHandler prevHandler;
+	xcb_key_press_event_t prevHandledEvent;
+	xcb_key_press_event_t prevEvent;
+	
 	static QString formatX11Error(Display *display, int errorCode);
 
 	class HotkeyErrorHandler {
@@ -41,9 +44,6 @@ private:
 		static QString errorString;
 
 	private:
-		XErrorHandler prevHandler;
-		xcb_key_press_event_t prevHandledEvent;
-		xcb_key_press_event_t prevEvent;
 		QTimer *releaseTimer = nullptr;
 
 		static int handleError(Display *display, XErrorEvent *error);
