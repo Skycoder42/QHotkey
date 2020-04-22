@@ -100,8 +100,8 @@ signals:
 	//! Will be emitted if the shortcut is pressed
 	void activated(QPrivateSignal);
 
-  //! Will be emitted if the shortcut press is released
-  void released(QPrivateSignal);
+	//! Will be emitted if the shortcut press is released
+	void released(QPrivateSignal);
 
 	//! @notifyAcFn{QHotkey::registered}
 	void registeredChanged(bool registered);
