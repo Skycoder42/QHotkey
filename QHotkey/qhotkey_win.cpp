@@ -28,6 +28,11 @@ private:
 };
 NATIVE_INSTANCE(QHotkeyPrivateWin)
 
+QHotkeyPrivateWin::QHotkeyPrivateWin(){
+	pollTimer.setInterval(50);
+	connect(&pollTimer, &QTimer::timeout, this, &QHotkeyPrivateWin::pollForHotkeyRelease);
+}
+
 bool QHotkeyPrivate::isPlatformSupported()
 {
 	return true;
