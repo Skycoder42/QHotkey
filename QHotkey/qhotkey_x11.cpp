@@ -29,10 +29,10 @@ protected:
 private:
 	static const QVector<quint32> specialModifiers;
 	static const quint32 validModsMask;
-	XErrorHandler prevHandler;
+	QTimer *releaseTimer = nullptr;
 	xcb_key_press_event_t prevHandledEvent;
 	xcb_key_press_event_t prevEvent;
-	
+
 	static QString formatX11Error(Display *display, int errorCode);
 
 	class HotkeyErrorHandler {
@@ -44,7 +44,7 @@ private:
 		static QString errorString;
 
 	private:
-		QTimer *releaseTimer = nullptr;
+		XErrorHandler prevHandler;
 
 		static int handleError(Display *display, XErrorEvent *error);
 	};
@@ -96,18 +96,18 @@ QString QHotkeyPrivateX11::getX11String(Qt::Key keycode)
 {
 	switch(keycode){
 
-		case Qt::Key_MediaLast : 
-		case Qt::Key_MediaPrevious : 
+		case Qt::Key_MediaLast :
+		case Qt::Key_MediaPrevious :
 			return "XF86AudioPrev";
-		case Qt::Key_MediaNext : 
+		case Qt::Key_MediaNext :
 			return "XF86AudioNext";
-		case Qt::Key_MediaPause : 
-		case Qt::Key_MediaPlay : 
+		case Qt::Key_MediaPause :
+		case Qt::Key_MediaPlay :
 		case Qt::Key_MediaTogglePlayPause :
 			return "XF86AudioPlay";
 		case Qt::Key_MediaRecord :
-			return "XF86AudioRecord"; 
-		case Qt::Key_MediaStop : 
+			return "XF86AudioRecord";
+		case Qt::Key_MediaStop :
 			return "XF86AudioStop";
 		default :
 			return QKeySequence(keycode).toString(QKeySequence::NativeText);
