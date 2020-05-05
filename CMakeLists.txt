@@ -42,7 +42,7 @@ target_link_libraries(qhotkey ${LIBS})
 
 target_include_directories(qhotkey
     PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/QHotkey>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/QHotkey>
         $<INSTALL_INTERFACE:include>)
 
 set_target_properties(qhotkey PROPERTIES
