@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QX11Info>
 #include <QThreadStorage>
+#include <QTimer>
 #include <X11/Xlib.h>
 #include <xcb/xcb.h>
 
@@ -28,6 +29,9 @@ protected:
 private:
 	static const QVector<quint32> specialModifiers;
 	static const quint32 validModsMask;
+	QTimer *releaseTimer = nullptr;
+	xcb_key_press_event_t prevHandledEvent;
+	xcb_key_press_event_t prevEvent;
 
 	static QString formatX11Error(Display *display, int errorCode);
 
@@ -62,8 +66,27 @@ bool QHotkeyPrivateX11::nativeEventFilter(const QByteArray &eventType, void *mes
 
 	xcb_generic_event_t *genericEvent = static_cast<xcb_generic_event_t *>(message);
 	if (genericEvent->response_type == XCB_KEY_PRESS) {
-		xcb_key_press_event_t *keyEvent = static_cast<xcb_key_press_event_t *>(message);
-		this->activateShortcut({keyEvent->detail, keyEvent->state & QHotkeyPrivateX11::validModsMask});
+		xcb_key_press_event_t keyEvent = *static_cast<xcb_key_press_event_t *>(message);
+		this->prevEvent = keyEvent;
+		if (this->prevHandledEvent.response_type == XCB_KEY_RELEASE) {
+			if(this->prevHandledEvent.time == keyEvent.time) return false;
+		}
+		this->activateShortcut({keyEvent.detail, keyEvent.state & QHotkeyPrivateX11::validModsMask});
+	} else if (genericEvent->response_type == XCB_KEY_RELEASE) {
+		xcb_key_release_event_t keyEvent = *static_cast<xcb_key_release_event_t *>(message);
+		this->prevEvent = keyEvent;
+		QTimer *timer = new QTimer(this);
+		timer->setSingleShot(true);
+		timer->setInterval(50);
+		connect(timer, &QTimer::timeout, this, [this, keyEvent, timer] {
+			if(this->prevEvent.time == keyEvent.time && this->prevEvent.response_type == keyEvent.response_type && this->prevEvent.detail == keyEvent.detail){
+				this->releaseShortcut({keyEvent.detail, keyEvent.state & QHotkeyPrivateX11::validModsMask});
+			}
+			delete timer;
+		});
+		timer->start();
+		this->releaseTimer = timer;
+		this->prevHandledEvent = keyEvent;
 	}
 
 	return false;
@@ -73,18 +96,18 @@ QString QHotkeyPrivateX11::getX11String(Qt::Key keycode)
 {
 	switch(keycode){
 
-		case Qt::Key_MediaLast : 
-		case Qt::Key_MediaPrevious : 
+		case Qt::Key_MediaLast :
+		case Qt::Key_MediaPrevious :
 			return "XF86AudioPrev";
-		case Qt::Key_MediaNext : 
+		case Qt::Key_MediaNext :
 			return "XF86AudioNext";
-		case Qt::Key_MediaPause : 
-		case Qt::Key_MediaPlay : 
+		case Qt::Key_MediaPause :
+		case Qt::Key_MediaPlay :
 		case Qt::Key_MediaTogglePlayPause :
 			return "XF86AudioPlay";
 		case Qt::Key_MediaRecord :
-			return "XF86AudioRecord"; 
-		case Qt::Key_MediaStop : 
+			return "XF86AudioRecord";
+		case Qt::Key_MediaStop :
 			return "XF86AudioStop";
 		default :
 			return QKeySequence(keycode).toString(QKeySequence::NativeText);
