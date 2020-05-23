@@ -6,6 +6,10 @@
 
 #define HKEY_ID(nativeShortcut) (((nativeShortcut.key ^ (nativeShortcut.modifier << 8)) & 0x0FFF) | 0x7000)
 
+#if !defined(MOD_NOREPEAT)
+#define MOD_NOREPEAT 0x4000
+#endif
+
 class QHotkeyPrivateWin : public QHotkeyPrivate
 {
 public:
