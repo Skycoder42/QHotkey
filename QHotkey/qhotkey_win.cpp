@@ -267,8 +267,7 @@ bool QHotkeyPrivateWin::registerShortcut(QHotkey::NativeShortcut shortcut)
 	if(ok)
 		return true;
 	else {
-		qCWarning(logQHotkey) << "Failed to register hotkey. Error:"
-							  << qPrintable(QHotkeyPrivateWin::formatWinError(::GetLastError()));
+		error = QHotkeyPrivateWin::formatWinError(::GetLastError());
 		return false;
 	}
 }
@@ -279,8 +278,7 @@ bool QHotkeyPrivateWin::unregisterShortcut(QHotkey::NativeShortcut shortcut)
 	if(ok)
 		return true;
 	else {
-		qCWarning(logQHotkey) << "Failed to unregister hotkey. Error:"
-							  << qPrintable(QHotkeyPrivateWin::formatWinError(::GetLastError()));
+		error = QHotkeyPrivateWin::formatWinError(::GetLastError());
 		return false;
 	}
 }

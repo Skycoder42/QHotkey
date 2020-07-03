@@ -33,6 +33,8 @@ protected:
 	virtual bool registerShortcut(QHotkey::NativeShortcut shortcut) = 0;//platform implement
 	virtual bool unregisterShortcut(QHotkey::NativeShortcut shortcut) = 0;//platform implement
 
+	QString error;
+
 private:
 	QHash<QPair<Qt::Key, Qt::KeyboardModifiers>, QHotkey::NativeShortcut> mapping;
 	QMultiHash<QHotkey::NativeShortcut, QHotkey*> shortcuts;
