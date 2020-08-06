@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.1)
 
 project(qhotkey VERSION 1.2.2 LANGUAGES CXX)
 
-option(QHOTKEY_EXAMPLES "Build examples" ON)
+option(QHOTKEY_EXAMPLES "Build examples" OFF)
+option(QHOTKEY_INSTALL "Enable install rule" ON)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
@@ -42,7 +43,7 @@ target_link_libraries(qhotkey ${LIBS})
 
 target_include_directories(qhotkey
     PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/QHotkey>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/QHotkey>
         $<INSTALL_INTERFACE:include>)
 
 set_target_properties(qhotkey PROPERTIES
@@ -53,18 +54,20 @@ if(QHOTKEY_EXAMPLES)
     add_subdirectory(HotkeyTest)
 endif()
 
-include(GNUInstallDirs)
-set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/QHotkey)
+if(QHOTKEY_INSTALL)
+    include(GNUInstallDirs)
+    set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/QHotkey)
 
-install(
-    TARGETS qhotkey EXPORT QHotkeyConfig
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(FILES
-    ${CMAKE_SOURCE_DIR}/QHotkey/qhotkey.h
-    ${CMAKE_SOURCE_DIR}/QHotkey/QHotkey
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/)
-install(EXPORT QHotkeyConfig DESTINATION ${INSTALL_CONFIGDIR})
+    install(
+        TARGETS qhotkey EXPORT QHotkeyConfig
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+    install(FILES
+        ${CMAKE_CURRENT_SOURCE_DIR}/QHotkey/qhotkey.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/QHotkey/QHotkey
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/)
+    install(EXPORT QHotkeyConfig DESTINATION ${INSTALL_CONFIGDIR})
 
-export(TARGETS qhotkey FILE QHotkeyConfig.cmake)
+    export(TARGETS qhotkey FILE QHotkeyConfig.cmake)
+endif()

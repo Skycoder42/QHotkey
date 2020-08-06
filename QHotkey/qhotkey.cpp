@@ -262,6 +262,13 @@ void QHotkeyPrivate::activateShortcut(QHotkey::NativeShortcut shortcut)
 		signal.invoke(hkey, Qt::QueuedConnection);
 }
 
+void QHotkeyPrivate::releaseShortcut(QHotkey::NativeShortcut shortcut)
+{
+	QMetaMethod signal = QMetaMethod::fromSignal(&QHotkey::released);
+	for(QHotkey *hkey : shortcuts.values(shortcut))
+		signal.invoke(hkey, Qt::QueuedConnection);
+}
+
 void QHotkeyPrivate::addMappingInvoked(Qt::Key keycode, Qt::KeyboardModifiers modifiers, const QHotkey::NativeShortcut &nativeShortcut)
 {
 	mapping.insert({keycode, modifiers}, nativeShortcut);
@@ -272,8 +279,10 @@ bool QHotkeyPrivate::addShortcutInvoked(QHotkey *hotkey)
 	QHotkey::NativeShortcut shortcut = hotkey->_nativeShortcut;
 
 	if(!shortcuts.contains(shortcut)) {
-		if(!registerShortcut(shortcut))
+		if(!registerShortcut(shortcut)) {
+			qCWarning(logQHotkey) << QHotkey::tr("Failed to register %1. Error: %2").arg(hotkey->shortcut().toString(), error);
 			return false;
+		}
 	}
 
 	shortcuts.insert(shortcut, hotkey);
@@ -289,9 +298,13 @@ bool QHotkeyPrivate::removeShortcutInvoked(QHotkey *hotkey)
 		return false;
 	hotkey->_registered = false;
 	emit hotkey->registeredChanged(true);
-	if(shortcuts.count(shortcut) == 0)
-		return unregisterShortcut(shortcut);
-	else
+	if(shortcuts.count(shortcut) == 0) {
+		if (!unregisterShortcut(shortcut)) {
+			qCWarning(logQHotkey) << QHotkey::tr("Failed to unregister %1. Error: %2").arg(hotkey->shortcut().toString(), error);
+			return false;
+		} else
+			return true;
+	} else
 		return true;
 }
 
