@@ -154,7 +154,7 @@ quint32 QHotkeyPrivateX11::nativeModifiers(Qt::KeyboardModifiers modifiers, bool
 bool QHotkeyPrivateX11::registerShortcut(QHotkey::NativeShortcut shortcut)
 {
 	Display *display = QX11Info::display();
-	if(!display)
+	if(!display || !QX11Info::isPlatformX11())
 		return false;
 
 	HotkeyErrorHandler errorHandler;
