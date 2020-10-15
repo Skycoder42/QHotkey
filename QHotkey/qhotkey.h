@@ -68,7 +68,7 @@ public:
 	explicit QHotkey(Qt::Key keyCode, Qt::KeyboardModifiers modifiers, bool autoRegister = false, QObject *parent = nullptr);
 	//! Constructs a hotkey from a native shortcut and optionally registers it
 	explicit QHotkey(const NativeShortcut &shortcut, bool autoRegister = false, QObject *parent = nullptr);
-	~QHotkey();
+	~QHotkey() override;
 
 	//! @readAcFn{QHotkey::registered}
 	bool isRegistered() const;
