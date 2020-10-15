@@ -71,7 +71,7 @@ quint32 QHotkeyPrivateWin::nativeKeycode(Qt::Key keycode, bool &ok)
 {
 	ok = true;
 	if(keycode <= 0xFFFF) {//Try to obtain the key from it's "character"
-		const SHORT vKey = VkKeyScanW(keycode);
+		const SHORT vKey = VkKeyScanW(static_cast<WCHAR>(keycode));
 		if(vKey > -1)
 			return LOBYTE(vKey);
 	}
