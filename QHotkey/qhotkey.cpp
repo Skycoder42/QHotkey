@@ -8,7 +8,7 @@
 
 Q_LOGGING_CATEGORY(logQHotkey, "QHotkey")
 
-void QHotkey::addGlobalMapping(const QKeySequence &shortcut, const QHotkey::NativeShortcut &nativeShortcut)
+void QHotkey::addGlobalMapping(const QKeySequence &shortcut, QHotkey::NativeShortcut nativeShortcut)
 {
 	QMetaObject::invokeMethod(QHotkeyPrivate::instance(), "addMappingInvoked", Qt::QueuedConnection,
 							  Q_ARG(Qt::Key, Qt::Key(shortcut[0] & ~Qt::KeyboardModifierMask)),
@@ -40,7 +40,7 @@ QHotkey::QHotkey(Qt::Key keyCode, Qt::KeyboardModifiers modifiers, bool autoRegi
 	setShortcut(keyCode, modifiers, autoRegister);
 }
 
-QHotkey::QHotkey(const QHotkey::NativeShortcut &shortcut, bool autoRegister, QObject *parent) :
+QHotkey::QHotkey(QHotkey::NativeShortcut shortcut, bool autoRegister, QObject *parent) :
 	QHotkey(parent)
 {
 	setNativeShortcut(shortcut, autoRegister);
@@ -263,7 +263,7 @@ void QHotkeyPrivate::releaseShortcut(QHotkey::NativeShortcut shortcut)
 		signal.invoke(hkey, Qt::QueuedConnection);
 }
 
-void QHotkeyPrivate::addMappingInvoked(Qt::Key keycode, Qt::KeyboardModifiers modifiers, const QHotkey::NativeShortcut &nativeShortcut)
+void QHotkeyPrivate::addMappingInvoked(Qt::Key keycode, Qt::KeyboardModifiers modifiers, QHotkey::NativeShortcut nativeShortcut)
 {
 	mapping.insert({keycode, modifiers}, nativeShortcut);
 }
@@ -335,26 +335,26 @@ bool QHotkey::NativeShortcut::isValid() const
 	return valid;
 }
 
-bool QHotkey::NativeShortcut::operator ==(const QHotkey::NativeShortcut &other) const
+bool QHotkey::NativeShortcut::operator ==(QHotkey::NativeShortcut other) const
 {
 	return (key == other.key) &&
 		   (modifier == other.modifier) &&
 		   valid == other.valid;
 }
 
-bool QHotkey::NativeShortcut::operator !=(const QHotkey::NativeShortcut &other) const
+bool QHotkey::NativeShortcut::operator !=(QHotkey::NativeShortcut other) const
 {
 	return (key != other.key) ||
 		   (modifier != other.modifier) ||
 		   valid != other.valid;
 }
 
-uint qHash(const QHotkey::NativeShortcut &key)
+uint qHash(QHotkey::NativeShortcut key)
 {
 	return qHash(key.key) ^ qHash(key.modifier);
 }
 
-uint qHash(const QHotkey::NativeShortcut &key, uint seed)
+uint qHash(QHotkey::NativeShortcut key, uint seed)
 {
 	return qHash(key.key, seed) ^ qHash(key.modifier, seed);
 }
