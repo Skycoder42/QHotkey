@@ -98,17 +98,17 @@ QString QHotkeyPrivateX11::getX11String(Qt::Key keycode)
 
 		case Qt::Key_MediaLast :
 		case Qt::Key_MediaPrevious :
-			return "XF86AudioPrev";
+			return QStringLiteral("XF86AudioPrev");
 		case Qt::Key_MediaNext :
-			return "XF86AudioNext";
+			return QStringLiteral("XF86AudioNext");
 		case Qt::Key_MediaPause :
 		case Qt::Key_MediaPlay :
 		case Qt::Key_MediaTogglePlayPause :
-			return "XF86AudioPlay";
+			return QStringLiteral("XF86AudioPlay");
 		case Qt::Key_MediaRecord :
-			return "XF86AudioRecord";
+			return QStringLiteral("XF86AudioRecord");
 		case Qt::Key_MediaStop :
-			return "XF86AudioStop";
+			return QStringLiteral("XF86AudioStop");
 		default :
 			return QKeySequence(keycode).toString(QKeySequence::NativeText);
 	}
