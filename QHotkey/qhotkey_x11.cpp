@@ -22,14 +22,13 @@ protected:
 	// QHotkeyPrivate interface
 	quint32 nativeKeycode(Qt::Key keycode, bool &ok) Q_DECL_OVERRIDE;
 	quint32 nativeModifiers(Qt::KeyboardModifiers modifiers, bool &ok) Q_DECL_OVERRIDE;
-	QString getX11String(Qt::Key keycode);
+	static QString getX11String(Qt::Key keycode);
 	bool registerShortcut(QHotkey::NativeShortcut shortcut) Q_DECL_OVERRIDE;
 	bool unregisterShortcut(QHotkey::NativeShortcut shortcut) Q_DECL_OVERRIDE;
 
 private:
 	static const QVector<quint32> specialModifiers;
 	static const quint32 validModsMask;
-	QTimer *releaseTimer = nullptr;
 	xcb_key_press_event_t prevHandledEvent;
 	xcb_key_press_event_t prevEvent;
 
@@ -64,7 +63,7 @@ bool QHotkeyPrivateX11::nativeEventFilter(const QByteArray &eventType, void *mes
 	Q_UNUSED(eventType)
 	Q_UNUSED(result)
 
-	xcb_generic_event_t *genericEvent = static_cast<xcb_generic_event_t *>(message);
+	auto *genericEvent = static_cast<xcb_generic_event_t *>(message);
 	if (genericEvent->response_type == XCB_KEY_PRESS) {
 		xcb_key_press_event_t keyEvent = *static_cast<xcb_key_press_event_t *>(message);
 		this->prevEvent = keyEvent;
@@ -75,17 +74,11 @@ bool QHotkeyPrivateX11::nativeEventFilter(const QByteArray &eventType, void *mes
 	} else if (genericEvent->response_type == XCB_KEY_RELEASE) {
 		xcb_key_release_event_t keyEvent = *static_cast<xcb_key_release_event_t *>(message);
 		this->prevEvent = keyEvent;
-		QTimer *timer = new QTimer(this);
-		timer->setSingleShot(true);
-		timer->setInterval(50);
-		connect(timer, &QTimer::timeout, this, [this, keyEvent, timer] {
+		QTimer::singleShot(50, [this, keyEvent] {
 			if(this->prevEvent.time == keyEvent.time && this->prevEvent.response_type == keyEvent.response_type && this->prevEvent.detail == keyEvent.detail){
 				this->releaseShortcut({keyEvent.detail, keyEvent.state & QHotkeyPrivateX11::validModsMask});
 			}
-			delete timer;
 		});
-		timer->start();
-		this->releaseTimer = timer;
 		this->prevHandledEvent = keyEvent;
 	}
 
@@ -98,17 +91,17 @@ QString QHotkeyPrivateX11::getX11String(Qt::Key keycode)
 
 		case Qt::Key_MediaLast :
 		case Qt::Key_MediaPrevious :
-			return "XF86AudioPrev";
+			return QStringLiteral("XF86AudioPrev");
 		case Qt::Key_MediaNext :
-			return "XF86AudioNext";
+			return QStringLiteral("XF86AudioNext");
 		case Qt::Key_MediaPause :
 		case Qt::Key_MediaPlay :
 		case Qt::Key_MediaTogglePlayPause :
-			return "XF86AudioPlay";
+			return QStringLiteral("XF86AudioPlay");
 		case Qt::Key_MediaRecord :
-			return "XF86AudioRecord";
+			return QStringLiteral("XF86AudioRecord");
 		case Qt::Key_MediaStop :
-			return "XF86AudioStop";
+			return QStringLiteral("XF86AudioStop");
 		default :
 			return QKeySequence(keycode).toString(QKeySequence::NativeText);
 	}
@@ -132,8 +125,8 @@ quint32 QHotkeyPrivateX11::nativeKeycode(Qt::Key keycode, bool &ok)
 		if(res != 0)
 			ok = true;
 		return res;
-	} else
-		return 0;
+	}
+	return 0;
 }
 
 quint32 QHotkeyPrivateX11::nativeModifiers(Qt::KeyboardModifiers modifiers, bool &ok)
@@ -173,8 +166,8 @@ bool QHotkeyPrivateX11::registerShortcut(QHotkey::NativeShortcut shortcut)
 		error = errorHandler.errorString;
 		this->unregisterShortcut(shortcut);
 		return false;
-	} else
-		return true;
+	}
+	return true;
 }
 
 bool QHotkeyPrivateX11::unregisterShortcut(QHotkey::NativeShortcut shortcut)
@@ -188,15 +181,15 @@ bool QHotkeyPrivateX11::unregisterShortcut(QHotkey::NativeShortcut shortcut)
 		XUngrabKey(display,
 				   shortcut.key,
 				   shortcut.modifier | specialMod,
-				   DefaultRootWindow(display));
+				   XDefaultRootWindow(display));
 	}
 	XSync(display, False);
 
-	if(errorHandler.hasError) {
-		error = errorHandler.errorString;
+	if(HotkeyErrorHandler::hasError) {
+		error = HotkeyErrorHandler::errorString;
 		return false;
-	} else
-		return true;
+	}
+	return true;
 }
 
 QString QHotkeyPrivateX11::formatX11Error(Display *display, int errorCode)
