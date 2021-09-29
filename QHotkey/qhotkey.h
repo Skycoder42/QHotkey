@@ -16,6 +16,12 @@
 	#define QHOTKEY_SHARED_EXPORT
 #endif
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+	#define QHOTKEY_HASH_SEED size_t
+#else
+	#define QHOTKEY_HASH_SEED uint
+#endif
+
 //! A class to define global, systemwide Hotkeys
 class QHOTKEY_SHARED_EXPORT QHotkey : public QObject
 {
@@ -115,7 +121,7 @@ private:
 };
 
 uint QHOTKEY_SHARED_EXPORT qHash(QHotkey::NativeShortcut key);
-uint QHOTKEY_SHARED_EXPORT qHash(QHotkey::NativeShortcut key, uint seed);
+QHOTKEY_HASH_SEED QHOTKEY_SHARED_EXPORT qHash(QHotkey::NativeShortcut key, QHOTKEY_HASH_SEED seed);
 
 QHOTKEY_SHARED_EXPORT Q_DECLARE_LOGGING_CATEGORY(logQHotkey)
 
