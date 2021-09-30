@@ -7,15 +7,27 @@ option(QHOTKEY_INSTALL "Enable install rule" ON)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
+set(QT_MAJOR 5 CACHE STRING "Qt major version to use")
 
-qt5_wrap_cpp(MOC_HEADERS
-    QHotkey/qhotkey.h
-    QHotkey/qhotkey_p.h)
+if(QT_MAJOR EQUAL 6)
+    find_package(Qt${QT_MAJOR} 6.2.0 COMPONENTS Core Widgets REQUIRED)
+else()
+    find_package(Qt${QT_MAJOR} COMPONENTS Core Widgets REQUIRED)
+endif()
+
+if(QT_MAJOR GREATER_EQUAL 6)
+    qt_wrap_cpp(MOC_HEADERS
+        QHotkey/qhotkey.h
+        QHotkey/qhotkey_p.h)
+else()
+    qt5_wrap_cpp(MOC_HEADERS
+        QHotkey/qhotkey.h
+        QHotkey/qhotkey_p.h)
+endif()
 
 set(LIBS
-    Qt5::Core
-    Qt5::Widgets)
+    Qt${QT_MAJOR}::Core
+    Qt${QT_MAJOR}::Widgets)
 
 set(SRC_FILES
     QHotkey/qhotkey.cpp)
@@ -30,10 +42,14 @@ elseif(WIN32)
     set(SRC_FILES ${SRC_FILES} QHotkey/qhotkey_win.cpp)
 else()
     find_package(X11 REQUIRED)
-    find_package(Qt5X11Extras REQUIRED)
+    if(QT_MAJOR GREATER_EQUAL 6)
+        set(LIBS ${LIBS} ${X11_LIBRARIES})
+    else()
+        find_package(Qt${QT_MAJOR}X11Extras REQUIRED)
+        set(LIBS ${LIBS} ${X11_LIBRARIES} Qt${QT_MAJOR}::X11Extras)
+    endif()
 
     include_directories(${X11_INCLUDE_DIR})
-    set(LIBS ${LIBS} ${X11_LIBRARIES} Qt5::X11Extras)
     set(SRC_FILES ${SRC_FILES} QHotkey/qhotkey_x11.cpp)
 endif()
 

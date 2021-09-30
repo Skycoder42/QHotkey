@@ -10,9 +10,15 @@ Q_LOGGING_CATEGORY(logQHotkey, "QHotkey")
 
 void QHotkey::addGlobalMapping(const QKeySequence &shortcut, QHotkey::NativeShortcut nativeShortcut)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+	const int key = shortcut[0].toCombined();
+#else
+	const int key = shortcut[0];
+#endif
+
 	QMetaObject::invokeMethod(QHotkeyPrivate::instance(), "addMappingInvoked", Qt::QueuedConnection,
-							  Q_ARG(Qt::Key, Qt::Key(shortcut[0] & ~Qt::KeyboardModifierMask)),
-							  Q_ARG(Qt::KeyboardModifiers, Qt::KeyboardModifiers(shortcut[0] & Qt::KeyboardModifierMask)),
+							  Q_ARG(Qt::Key, Qt::Key(key & ~Qt::KeyboardModifierMask)),
+							  Q_ARG(Qt::KeyboardModifiers, Qt::KeyboardModifiers(key & Qt::KeyboardModifierMask)),
 							  Q_ARG(QHotkey::NativeShortcut, nativeShortcut));
 }
 
@@ -56,7 +62,12 @@ QKeySequence QHotkey::shortcut() const
 {
 	if(_keyCode == Qt::Key_unknown)
 		return QKeySequence();
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+	return QKeySequence((_keyCode | _modifiers).toCombined());
+#else
 	return QKeySequence(static_cast<int>(_keyCode | _modifiers));
+#endif
 }
 
 Qt::Key QHotkey::keyCode() const
@@ -88,8 +99,14 @@ bool QHotkey::setShortcut(const QKeySequence &shortcut, bool autoRegister)
 							  "Only the first shortcut will be used!");
 	}
 
-	return setShortcut(Qt::Key(shortcut[0] & ~Qt::KeyboardModifierMask),
-			Qt::KeyboardModifiers(shortcut[0] & Qt::KeyboardModifierMask),
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+	const int key = shortcut[0].toCombined();
+#else
+	const int key = shortcut[0];
+#endif
+
+	return setShortcut(Qt::Key(key & ~Qt::KeyboardModifierMask),
+			Qt::KeyboardModifiers(key & Qt::KeyboardModifierMask),
 			autoRegister);
 }
 
@@ -354,7 +371,7 @@ uint qHash(QHotkey::NativeShortcut key)
 	return qHash(key.key) ^ qHash(key.modifier);
 }
 
-uint qHash(QHotkey::NativeShortcut key, uint seed)
+QHOTKEY_HASH_SEED qHash(QHotkey::NativeShortcut key, QHOTKEY_HASH_SEED seed)
 {
 	return qHash(key.key, seed) ^ qHash(key.modifier, seed);
 }
