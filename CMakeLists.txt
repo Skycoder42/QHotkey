@@ -57,10 +57,12 @@ add_library(qhotkey ${SRC_FILES} ${MOC_HEADERS})
 add_library(QHotkey::QHotkey ALIAS qhotkey)
 target_link_libraries(qhotkey ${LIBS})
 
+include(GNUInstallDirs)
+
 target_include_directories(qhotkey
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/QHotkey>
-        $<INSTALL_INTERFACE:include>)
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
 set_target_properties(qhotkey PROPERTIES
     SOVERSION ${PROJECT_VERSION_MAJOR}
@@ -71,7 +73,6 @@ if(QHOTKEY_EXAMPLES)
 endif()
 
 if(QHOTKEY_INSTALL)
-    include(GNUInstallDirs)
     set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/QHotkey)
 
     install(
@@ -82,7 +83,7 @@ if(QHOTKEY_INSTALL)
     install(FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/QHotkey/qhotkey.h
         ${CMAKE_CURRENT_SOURCE_DIR}/QHotkey/QHotkey
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/)
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
     install(EXPORT QHotkeyConfig DESTINATION ${INSTALL_CONFIGDIR})
 
     export(TARGETS qhotkey FILE QHotkeyConfig.cmake)
