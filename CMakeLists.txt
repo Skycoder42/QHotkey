@@ -10,9 +10,9 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(QT_MAJOR 5 CACHE STRING "Qt major version to use")
 
 if(QT_MAJOR EQUAL 6)
-    find_package(Qt${QT_MAJOR} 6.2.0 COMPONENTS Core Widgets REQUIRED)
+    find_package(Qt${QT_MAJOR} 6.2.0 COMPONENTS Core Gui REQUIRED)
 else()
-    find_package(Qt${QT_MAJOR} COMPONENTS Core Widgets REQUIRED)
+    find_package(Qt${QT_MAJOR} COMPONENTS Core Gui REQUIRED)
 endif()
 
 if(QT_MAJOR GREATER_EQUAL 6)
@@ -25,37 +25,34 @@ else()
         QHotkey/qhotkey_p.h)
 endif()
 
-set(LIBS
-    Qt${QT_MAJOR}::Core
-    Qt${QT_MAJOR}::Widgets)
-
-set(SRC_FILES
-    QHotkey/qhotkey.cpp)
+add_library(qhotkey QHotkey/qhotkey.cpp ${MOC_HEADERS})
+add_library(QHotkey::QHotkey ALIAS qhotkey)
+target_link_libraries(qhotkey PUBLIC Qt${QT_MAJOR}::Core)
+target_link_libraries(qhotkey PRIVATE Qt${QT_MAJOR}::Gui)
 
 if(APPLE)
     find_library(CARBON_LIBRARY Carbon)
     mark_as_advanced(CARBON_LIBRARY)
 
-    set(SRC_FILES ${SRC_FILES} QHotkey/qhotkey_mac.cpp)
-    set(LIBS ${LIBS} ${CARBON_LIBRARY})
+    target_sources(qhotkey PRIVATE QHotkey/qhotkey_mac.cpp)
+    target_link_libraries(qhotkey PRIVATE ${CARBON_LIBRARY})
 elseif(WIN32)
-    set(SRC_FILES ${SRC_FILES} QHotkey/qhotkey_win.cpp)
+    target_sources(qhotkey PRIVATE QHotkey/qhotkey_win.cpp)
 else()
     find_package(X11 REQUIRED)
     if(QT_MAJOR GREATER_EQUAL 6)
-        set(LIBS ${LIBS} ${X11_LIBRARIES})
+        target_link_libraries(qhotkey PRIVATE ${X11_LIBRARIES})
     else()
         find_package(Qt${QT_MAJOR}X11Extras REQUIRED)
-        set(LIBS ${LIBS} ${X11_LIBRARIES} Qt${QT_MAJOR}::X11Extras)
+        target_link_libraries(qhotkey
+            PRIVATE
+                ${X11_LIBRARIES}
+                Qt${QT_MAJOR}::X11Extras)
     endif()
 
     include_directories(${X11_INCLUDE_DIR})
-    set(SRC_FILES ${SRC_FILES} QHotkey/qhotkey_x11.cpp)
+    target_sources(qhotkey PRIVATE QHotkey/qhotkey_x11.cpp)
 endif()
-
-add_library(qhotkey ${SRC_FILES} ${MOC_HEADERS})
-add_library(QHotkey::QHotkey ALIAS qhotkey)
-target_link_libraries(qhotkey ${LIBS})
 
 include(GNUInstallDirs)
 
