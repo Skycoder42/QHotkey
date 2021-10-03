@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.1)
 
-project(qhotkey VERSION 1.2.2 LANGUAGES CXX)
+project(qhotkey VERSION 1.4.2 LANGUAGES CXX)
 
 option(QHOTKEY_EXAMPLES "Build examples" OFF)
 option(QHOTKEY_INSTALL "Enable install rule" ON)
@@ -52,9 +52,18 @@ target_include_directories(qhotkey
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/QHotkey>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
+include(CMakePackageConfigHelpers)
+
 set_target_properties(qhotkey PROPERTIES
     SOVERSION ${PROJECT_VERSION_MAJOR}
-    VERSION ${PROJECT_VERSION})
+    VERSION ${PROJECT_VERSION}
+    INTERFACE_QHotkey_MAJOR_VERSION ${PROJECT_VERSION_MAJOR}
+    COMPATIBLE_INTERFACE_STRING QHotkey_MAJOR_VERSION)
+
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/QHotkeyConfigVersion.cmake
+    VERSION "${PROJECT_VERSION}"
+    COMPATIBILITY AnyNewerVersion)
 
 if(QHOTKEY_EXAMPLES)
     add_subdirectory(HotkeyTest)
@@ -72,6 +81,9 @@ if(QHOTKEY_INSTALL)
         ${CMAKE_CURRENT_SOURCE_DIR}/QHotkey/qhotkey.h
         ${CMAKE_CURRENT_SOURCE_DIR}/QHotkey/QHotkey
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+    install(FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/QHotkeyConfigVersion.cmake
+        DESTINATION ${INSTALL_CONFIGDIR})
     install(EXPORT QHotkeyConfig DESTINATION ${INSTALL_CONFIGDIR})
 
     export(TARGETS qhotkey FILE QHotkeyConfig.cmake)
