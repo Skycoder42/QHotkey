@@ -7,6 +7,12 @@
 #include <QMutex>
 #include <QGlobalStatic>
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+	#define _NATIVE_EVENT_RESULT qintptr
+#else
+	#define _NATIVE_EVENT_RESULT long
+#endif
+
 class QHOTKEY_SHARED_EXPORT QHotkeyPrivate : public QObject, public QAbstractNativeEventFilter
 {
 	Q_OBJECT

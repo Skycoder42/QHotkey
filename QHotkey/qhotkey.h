@@ -120,7 +120,7 @@ private:
 	bool _registered;
 };
 
-uint QHOTKEY_SHARED_EXPORT qHash(QHotkey::NativeShortcut key);
+QHOTKEY_HASH_SEED QHOTKEY_SHARED_EXPORT qHash(QHotkey::NativeShortcut key);
 QHOTKEY_HASH_SEED QHOTKEY_SHARED_EXPORT qHash(QHotkey::NativeShortcut key, QHOTKEY_HASH_SEED seed);
 
 QHOTKEY_SHARED_EXPORT Q_DECLARE_LOGGING_CATEGORY(logQHotkey)
