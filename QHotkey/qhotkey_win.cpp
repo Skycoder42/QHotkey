@@ -15,7 +15,7 @@ class QHotkeyPrivateWin : public QHotkeyPrivate
 public:
 	QHotkeyPrivateWin();
 	// QAbstractNativeEventFilter interface
-	bool nativeEventFilter(const QByteArray &eventType, void *message, long *result) Q_DECL_OVERRIDE;
+	bool nativeEventFilter(const QByteArray &eventType, void *message, _NATIVE_EVENT_RESULT *result) override;
 
 protected:
 	void pollForHotkeyRelease();
@@ -42,7 +42,7 @@ bool QHotkeyPrivate::isPlatformSupported()
 	return true;
 }
 
-bool QHotkeyPrivateWin::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
+bool QHotkeyPrivateWin::nativeEventFilter(const QByteArray &eventType, void *message, _NATIVE_EVENT_RESULT *result)
 {
 	Q_UNUSED(eventType)
 	Q_UNUSED(result)

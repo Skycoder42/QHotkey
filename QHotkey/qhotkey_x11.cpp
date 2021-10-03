@@ -3,13 +3,9 @@
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 2, 0)
 	#include <QGuiApplication>
-	
-	#define _NATIVE_EVENT_RESULT qintptr
 #else
 	#include <QDebug>
 	#include <QX11Info>
-	
-	#define _NATIVE_EVENT_RESULT long
 #endif
 
 #include <QThreadStorage>

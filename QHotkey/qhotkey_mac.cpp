@@ -7,7 +7,7 @@ class QHotkeyPrivateMac : public QHotkeyPrivate
 {
 public:
 	// QAbstractNativeEventFilter interface
-	bool nativeEventFilter(const QByteArray &eventType, void *message, long *result) Q_DECL_OVERRIDE;
+	bool nativeEventFilter(const QByteArray &eventType, void *message, _NATIVE_EVENT_RESULT *result) override;
 
 	static OSStatus hotkeyPressEventHandler(EventHandlerCallRef nextHandler, EventRef event, void* data);
 	static OSStatus hotkeyReleaseEventHandler(EventHandlerCallRef nextHandler, EventRef event, void* data);
@@ -33,7 +33,7 @@ bool QHotkeyPrivate::isPlatformSupported()
 bool QHotkeyPrivateMac::isHotkeyHandlerRegistered = false;
 QHash<QHotkey::NativeShortcut, EventHotKeyRef> QHotkeyPrivateMac::hotkeyRefs;
 
-bool QHotkeyPrivateMac::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
+bool QHotkeyPrivateMac::nativeEventFilter(const QByteArray &eventType, void *message, _NATIVE_EVENT_RESULT *result)
 {
 	Q_UNUSED(eventType)
 	Q_UNUSED(message)

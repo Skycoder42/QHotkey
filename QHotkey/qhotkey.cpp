@@ -366,7 +366,7 @@ bool QHotkey::NativeShortcut::operator !=(QHotkey::NativeShortcut other) const
 		   valid != other.valid;
 }
 
-uint qHash(QHotkey::NativeShortcut key)
+QHOTKEY_HASH_SEED qHash(QHotkey::NativeShortcut key)
 {
 	return qHash(key.key) ^ qHash(key.modifier);
 }
