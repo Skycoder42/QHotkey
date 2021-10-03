@@ -6,6 +6,7 @@ option(QHOTKEY_EXAMPLES "Build examples" OFF)
 option(QHOTKEY_INSTALL "Enable install rule" ON)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_AUTOMOC ON)
 
 set(QT_MAJOR 5 CACHE STRING "Qt major version to use")
 
@@ -15,17 +16,7 @@ else()
     find_package(Qt${QT_MAJOR} COMPONENTS Core Gui REQUIRED)
 endif()
 
-if(QT_MAJOR GREATER_EQUAL 6)
-    qt_wrap_cpp(MOC_HEADERS
-        QHotkey/qhotkey.h
-        QHotkey/qhotkey_p.h)
-else()
-    qt5_wrap_cpp(MOC_HEADERS
-        QHotkey/qhotkey.h
-        QHotkey/qhotkey_p.h)
-endif()
-
-add_library(qhotkey QHotkey/qhotkey.cpp ${MOC_HEADERS})
+add_library(qhotkey QHotkey/qhotkey.cpp)
 add_library(QHotkey::QHotkey ALIAS qhotkey)
 target_link_libraries(qhotkey PUBLIC Qt${QT_MAJOR}::Core)
 target_link_libraries(qhotkey PRIVATE Qt${QT_MAJOR}::Gui)
@@ -43,7 +34,7 @@ else()
     if(QT_MAJOR GREATER_EQUAL 6)
         target_link_libraries(qhotkey PRIVATE ${X11_LIBRARIES})
     else()
-        find_package(Qt${QT_MAJOR}X11Extras REQUIRED)
+        find_package(Qt${QT_MAJOR} COMPONENTS X11Extras REQUIRED)
         target_link_libraries(qhotkey
             PRIVATE
                 ${X11_LIBRARIES}
