@@ -59,7 +59,4 @@ private:
 		return hotkeyPrivate;\
 	}
 
-Q_DECLARE_METATYPE(Qt::Key)
-Q_DECLARE_METATYPE(Qt::KeyboardModifiers)
-
 #endif // QHOTKEY_P_H
