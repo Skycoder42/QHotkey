@@ -6,7 +6,7 @@ VERSION = 1.2.1
 
 include(../qhotkey.pri)
 
-DEFINES += QHOTKEY_LIB QHOTKEY_LIB_BUILD
+DEFINES += QHOTKEY_SHARED QHOTKEY_LIBRARY
 
 # use INSTALL_ROOT to modify the install location
 headers.files = $$PUBLIC_HEADERS

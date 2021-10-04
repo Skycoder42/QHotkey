@@ -13,7 +13,7 @@
 	#define _NATIVE_EVENT_RESULT long
 #endif
 
-class QHOTKEY_SHARED_EXPORT QHotkeyPrivate : public QObject, public QAbstractNativeEventFilter
+class QHOTKEY_EXPORT QHotkeyPrivate : public QObject, public QAbstractNativeEventFilter
 {
 	Q_OBJECT
 
