@@ -6,14 +6,10 @@
 #include <QPair>
 #include <QLoggingCategory>
 
-#ifdef QHOTKEY_LIB
-	#ifdef QHOTKEY_LIB_BUILD
-		#define QHOTKEY_SHARED_EXPORT Q_DECL_EXPORT
-	#else
-		#define QHOTKEY_SHARED_EXPORT Q_DECL_IMPORT
-	#endif
+#ifdef QHOTKEY_LIBRARY
+	#define QHOTKEY_SHARED_EXPORT Q_DECL_EXPORT
 #else
-	#define QHOTKEY_SHARED_EXPORT
+	#define QHOTKEY_SHARED_EXPORT Q_DECL_IMPORT
 #endif
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)

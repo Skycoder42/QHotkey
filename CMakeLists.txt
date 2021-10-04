@@ -18,6 +18,7 @@ endif()
 
 add_library(qhotkey QHotkey/qhotkey.cpp)
 add_library(QHotkey::QHotkey ALIAS qhotkey)
+add_definitions(-DQHOTKEY_LIBRARY)
 target_link_libraries(qhotkey PUBLIC Qt${QT_MAJOR}::Core)
 target_link_libraries(qhotkey PRIVATE Qt${QT_MAJOR}::Gui)
 
