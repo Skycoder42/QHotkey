@@ -21,6 +21,11 @@ add_library(QHotkey::QHotkey ALIAS qhotkey)
 target_link_libraries(qhotkey PUBLIC Qt${QT_MAJOR}::Core)
 target_link_libraries(qhotkey PRIVATE Qt${QT_MAJOR}::Gui)
 
+if(BUILD_SHARED_LIBS)
+    target_compile_definitions(qhotkey PRIVATE QHOTKEY_LIBRARY)
+    target_compile_definitions(qhotkey PUBLIC QHOTKEY_SHARED)
+endif()
+
 if(APPLE)
     find_library(CARBON_LIBRARY Carbon)
     mark_as_advanced(CARBON_LIBRARY)
