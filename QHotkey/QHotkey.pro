@@ -2,7 +2,7 @@ TEMPLATE = lib
 win32: CONFIG += dll
 
 TARGET = QHotkey
-VERSION = 1.2.1
+VERSION = 1.4.2
 
 include(../qhotkey.pri)
 
