@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.1)
 
-project(qhotkey VERSION 1.4.2 LANGUAGES CXX)
+project(qhotkey VERSION 1.5.0 LANGUAGES CXX)
 
 option(QHOTKEY_EXAMPLES "Build examples" OFF)
 option(QHOTKEY_INSTALL "Enable install rule" ON)
