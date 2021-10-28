@@ -20,8 +20,7 @@ endif()
 
 add_library(qhotkey QHotkey/qhotkey.cpp)
 add_library(QHotkey::QHotkey ALIAS qhotkey)
-target_link_libraries(qhotkey PUBLIC Qt${QT_DEFAULT_MAJOR_VERSION}::Core)
-target_link_libraries(qhotkey PRIVATE Qt${QT_DEFAULT_MAJOR_VERSION}::Gui)
+target_link_libraries(qhotkey PUBLIC Qt${QT_DEFAULT_MAJOR_VERSION}::Core Qt${QT_DEFAULT_MAJOR_VERSION}::Gui)
 
 if(BUILD_SHARED_LIBS)
     target_compile_definitions(qhotkey PRIVATE QHOTKEY_LIBRARY)
