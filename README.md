@@ -74,17 +74,17 @@ The following example shows a simple application that will run without a window 
 
 int main(int argc, char *argv[])
 {
-	QApplication a(argc, argv);
+	QApplication app(argc, argv);
 
-	auto hotkey = new QHotkey(QKeySequence("ctrl+alt+Q"), true, &a);//The hotkey will be automatically registered
-	qDebug() << "Is Registered: " << hotkey->isRegistered();
+	QHotkey hotkey(QKeySequence("Ctrl+Alt+Q"), true, &app); //The hotkey will be automatically registered
+	qDebug() << "Is segistered:" << hotkey.isRegistered();
 
-	QObject::connect(hotkey, &QHotkey::activated, qApp, [&](){
+	QObject::connect(&hotkey, &QHotkey::activated, qApp, [&](){
 		qDebug() << "Hotkey Activated - the application will quit now";
 		qApp->quit();
 	});
 
-	return a.exec();
+	return app.exec();
 }
 ```
 
