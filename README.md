@@ -20,11 +20,11 @@ QHotkey supports both Qt6 and Qt5. When using Qt6, version 6.2.0 or later requir
 
 ### CMake
 
-The CMake `QT_MAJOR` variable controls which major version of Qt is used for building, and defaults to `5`. For example, use the CMake command line option `-DQT_MAJOR=6` for building with Qt6. To build the testing application `QHotkeyTest`, specify `-DQHOTKEY_EXAMPLES=ON`. CMake example usage:
+The CMake `QT_DEFAULT_MAJOR_VERSION` variable controls which major version of Qt is used for building, and defaults to `5`. For example, use the CMake command line option `-DQT_DEFAULT_MAJOR_VERSION=6` for building with Qt6. To build the testing application `QHotkeyTest`, specify `-DQHOTKEY_EXAMPLES=ON`. CMake example usage:
 
 ```
 $ cd QHotkey
-$ cmake -B build -S . -DQT_MAJOR=6
+$ cmake -B build -S . -DQT_DEFAULT_MAJOR_VERSION=6
 $ cmake --build build
 # cmake --install build
 ```
