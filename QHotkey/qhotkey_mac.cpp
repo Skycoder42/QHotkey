@@ -134,7 +134,7 @@ quint32 QHotkeyPrivateMac::nativeKeycode(Qt::Key keycode, bool &ok)
 	UTF16Char ch = keycode;
 
 	CFDataRef currentLayoutData;
-	TISInputSourceRef currentKeyboard = TISCopyCurrentKeyboardInputSource();
+	TISInputSourceRef currentKeyboard = TISCopyCurrentASCIICapableKeyboardLayoutInputSource();
 
 	if (currentKeyboard == NULL)
 		return 0;
