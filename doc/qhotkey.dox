@@ -38,7 +38,7 @@ In addition to the normal accessors, a modification of the QHotkey::shortcut pro
 @default{`QKeySequence()` (`Qt::Key_unknown` + `Qt::NoModifier`)}
 
 Holds the shortcut this hotkey will be registered on. It can be used as QKeySequence or as a combination of
-a Qt::Key and Qt::KeyboardModifiers. All write-accessors specifiy an additional parameter to immediatly register
+a Qt::Key and Qt::KeyboardModifiers. All write-accessors specify an additional parameter to immediately register
 the hotkey.
 
 @note Since the operating systems do not support hotkeys that consist of multiple key-combinations in a sequence,
@@ -107,7 +107,7 @@ it does. This does not happen if used from the main thread.
 
 If the hotkey is still registered on destruction, it will automatically unregister itself.
 
-@warning If using a hotkey on a thread other than the main thread, make shure the QApplication is still running it's eventloop.
+@warning If using a hotkey on a thread other than the main thread, make sure the QApplication is still running it's eventloop.
 Otherwise your application will hang up.
 
 @sa QHotkey::registered
@@ -144,7 +144,7 @@ from the thread this instance lives on.
 
 This method can be used to remap specific hotkey to a different native representation than the
 one that would be used by default. This can be useful if specific key combinations work fine
-on allmost all platforms, but on one you need a different keycode for the same effect. See
+on almost all platforms, but on one you need a different keycode for the same effect. See
 [Issue #15](https://github.com/Skycoder42/QHotkey/issues/15) for an example where this is the
 case.
 
