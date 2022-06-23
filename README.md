@@ -31,7 +31,7 @@ $ cmake --build build
 
 ### qmake
 
-The major version of Qt is chosen by the qmake invokation itself, as the qmake executable is tied to a specific Qt version. The executable name can vary between operating systems. qmake example usage:
+The major version of Qt is chosen by the qmake invocation itself, as the qmake executable is tied to a specific Qt version. The executable name can vary between operating systems. qmake example usage:
 
 ```
 $ cd QHotkey
@@ -94,18 +94,18 @@ int main(int argc, char *argv[])
 By running the example in `./HotkeyTest` you can test out the QHotkey class. There are 4 sections:
 - **Playground:** You can enter some sequences here and try it out with different key combinations.
 - **Testings:** A list of selected hotkeys. Activate it and try out which ones work for you (*Hint:* Depending on OS and keyboard layout, it's very possible that a few don't work).
-- **Threading:** Activate the checkbox to move 2 Hotkeys of the playground to seperate threads. It should work without a difference.
+- **Threading:** Activate the checkbox to move 2 Hotkeys of the playground to separate threads. It should work without a difference.
 - **Native Shortcut**: Allows you to try out the direct usage of native shortcuts
 
 ### Logging
-By default, QHotkey prints some warning messages if something goes wrong (For example, a key that cannot be translated). All messages of QHotkey are grouped into the [QLoggingCategory](https://doc.qt.io/qt-5/qloggingcategory.html) `"QHotkey"`. If you want to simply disable the logging, call the folling function somewhere in your code:
+By default, QHotkey prints some warning messages if something goes wrong (For example, a key that cannot be translated). All messages of QHotkey are grouped into the [QLoggingCategory](https://doc.qt.io/qt-5/qloggingcategory.html) `"QHotkey"`. If you want to simply disable the logging, call the following function somewhere in your code:
 ```cpp
 QLoggingCategory::setFilterRules(QStringLiteral("QHotkey.warning=false"));
 ```
-This will turn all warnings of QHotkey of (It only uses warnings for now, thats why this is enough). For more information about all the things you can do with the logging categories, check the Qt-Documentation
+This will turn all warnings of QHotkey of (It only uses warnings for now, that's why this is enough). For more information about all the things you can do with the logging categories, check the Qt-Documentation
 
-## Thread saftey
-The QHotkey class itself is reentrant - wich means you can create as many instances as required on any thread. This allows you to use the QHotkey on all threads. **But** you should never use the QHotkey instance on a thread that is different from the one the instance belongs to! Internally the system uses a singleton instance that handles the hotkey events and distributes them to the QHotkey instances. This internal class is completley threadsafe.
+## Thread safety
+The QHotkey class itself is reentrant - which means you can create as many instances as required on any thread. This allows you to use the QHotkey on all threads. **But** you should never use the QHotkey instance on a thread that is different from the one the instance belongs to! Internally the system uses a singleton instance that handles the hotkey events and distributes them to the QHotkey instances. This internal class is completely threadsafe.
 
 However, this singleton instance only runs on the main thread. (One reason is that some of the OS-Functions are not thread safe). To make threaded hotkeys possible, the critical functions (registering/unregistering hotkeys and keytranslation) are all run on the mainthread too. The QHotkey instances on other threads use `QMetaObject::invokeMethod` with a `Qt::BlockingQueuedConnection`.
 
