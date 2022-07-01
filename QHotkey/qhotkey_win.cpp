@@ -235,7 +235,7 @@ quint32 QHotkeyPrivateWin::nativeKeycode(Qt::Key keycode, bool &ok)
 
 	default:
 		if(keycode <= 0xFFFF)
-			return (BYTE)keycode;
+			return static_cast<BYTE>(keycode);
 		else {
 			ok = false;
 			return 0;
