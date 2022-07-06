@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.1)
 
-project(qhotkey VERSION 1.5.0 LANGUAGES CXX)
+set(RELEASE_VERSION_MAJOR "1")
+set(RELEASE_VERSION_MINOR "5")
+set(RELEASE_VERSION_MICRO "0")
+set(RELEASE_VERSION "${RELEASE_VERSION_MAJOR}.${RELEASE_VERSION_MINOR}.${RELEASE_VERSION_MICRO}")
+project(qhotkey VERSION ${RELEASE_VERSION} LANGUAGES CXX)
 
 option(QHOTKEY_EXAMPLES "Build examples" OFF)
 option(QHOTKEY_INSTALL "Enable install rule" ON)
@@ -93,4 +97,38 @@ if(QHOTKEY_INSTALL)
     install(EXPORT QHotkeyConfig DESTINATION ${INSTALL_CONFIGDIR})
 
     export(TARGETS qhotkey FILE QHotkeyConfig.cmake)
+endif()
+
+if(UNIX)
+    # General settings
+    set(CPACK_GENERATOR "TBZ2")
+    set(CPACK_PACKAGE_NAME "libqhotkey")
+    set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Global hotkey library for Qt software")
+    set(LICENSE_FILE "LICENSE")
+    set(README_FILE "README.md")
+    set(PROJECT_URL "https://skycoder42.github.io/QHotkey/")
+    set(COMPRESION_TYPE "xz")
+    set(CPACK_PACKAGE_VENDOR "Javier O. Cordero Pérez")
+    set(CPACK_PACKAGE_CONTACT "javiercorderoperez@gmail.com")
+    set(CPACK_PACKAGE_VERSION_MAJOR "${RELEASE_VERSION_MAJOR}")
+    set(CPACK_PACKAGE_VERSION_MINOR "${RELEASE_VERSION_MINOR}")
+    set(CPACK_PACKAGE_VERSION_PATCH "${RELEASE_VERSION_MICRO}")
+    set(CPACK_PACKAGE_VERSION "${RELEASE_VERSION}")
+    set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/${README_FILE}")
+    # CPACK: DEB Specific Settings
+    set(CPACK_DEBIAN_PACKAGE_SECTION "Libraries")
+    set(CPACK_DEBIAN_PACKAGE_HOMEPAGE ${PROJECT_URL})
+    set(CPACK_DEBIAN_COMPRESSION_TYPE ${COMPRESION_TYPE})
+
+    # Output filename
+    set(CPACK_SYSTEM_NAME "${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
+
+    # Set dependencies
+    if(QT_DEFAULT_MAJOR_VERSION EQUAL 6)
+        set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt6x11extras6 (>= 6.2.0)")
+    else()
+        set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt5x11extras5 (>= 5.15.2)")
+    endif()
+
+    include(CPack)
 endif()
