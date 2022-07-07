@@ -22,6 +22,21 @@ else()
     find_package(Qt${QT_DEFAULT_MAJOR_VERSION} COMPONENTS Core Gui REQUIRED)
 endif()
 
+# General settings
+set(CPACK_PACKAGE_VENDOR "Skycoder42")
+set(CPACK_PACKAGE_CONTACT "Shatur")
+set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.md")
+# CPACK: DEB Specific Settings
+set(CPACK_DEBIAN_PACKAGE_NAME "libqhotkey")
+set(CPACK_DEBIAN_PACKAGE_SECTION "Libraries")
+# Set dependencies
+if(QT_DEFAULT_MAJOR_VERSION EQUAL 6)
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt6x11extras6 (>= 6.2.0)")
+else()
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt5x11extras5 (>= 5.15.2)")
+endif()
+include(CPack)
+
 add_library(qhotkey QHotkey/qhotkey.cpp)
 add_library(QHotkey::QHotkey ALIAS qhotkey)
 target_link_libraries(qhotkey PUBLIC Qt${QT_DEFAULT_MAJOR_VERSION}::Core Qt${QT_DEFAULT_MAJOR_VERSION}::Gui)
@@ -97,24 +112,4 @@ if(QHOTKEY_INSTALL)
     install(EXPORT QHotkeyConfig DESTINATION ${INSTALL_CONFIGDIR})
 
     export(TARGETS qhotkey FILE QHotkeyConfig.cmake)
-endif()
-
-if(UNIX)
-    # General settings
-    set(COMPRESION_TYPE "xz")
-    set(CPACK_PACKAGE_VENDOR "Javier O. Cordero Pérez")
-    set(CPACK_PACKAGE_CONTACT "javiercorderoperez@gmail.com")
-    set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.md")
-    # CPACK: DEB Specific Settings
-    set(CPACK_DEBIAN_PACKAGE_NAME "libqhotkey")
-    set(CPACK_DEBIAN_PACKAGE_SECTION "Libraries")
-    set(CPACK_DEBIAN_COMPRESSION_TYPE ${COMPRESION_TYPE})
-    # Set dependencies
-    if(QT_DEFAULT_MAJOR_VERSION EQUAL 6)
-        set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt6x11extras6 (>= 6.2.0)")
-    else()
-        set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt5x11extras5 (>= 5.15.2)")
-    endif()
-
-    include(CPack)
 endif()
