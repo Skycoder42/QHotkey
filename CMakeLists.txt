@@ -102,7 +102,7 @@ endif()
 if(UNIX)
     # General settings
     set(CPACK_GENERATOR "TBZ2")
-    set(CPACK_PACKAGE_NAME "libqhotkey")
+    set(CPACK_DEBIAN_PACKAGE_NAME "libqhotkey")
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Global hotkey library for Qt software")
     set(LICENSE_FILE "LICENSE")
     set(README_FILE "README.md")
