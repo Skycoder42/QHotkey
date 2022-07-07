@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.1)
 
-project(qhotkey VERSION 1.5.0 LANGUAGES CXX)
+project(qhotkey
+    VERSION 1.5.0
+    DESCRIPTION "Global hotkey library for Qt software"
+    HOMEPAGE_URL "https://skycoder42.github.io/QHotkey/"
+    LANGUAGES CXX)
 
 option(QHOTKEY_EXAMPLES "Build examples" OFF)
 option(QHOTKEY_INSTALL "Enable install rule" ON)
@@ -17,6 +21,21 @@ if(QT_DEFAULT_MAJOR_VERSION EQUAL 6)
 else()
     find_package(Qt${QT_DEFAULT_MAJOR_VERSION} COMPONENTS Core Gui REQUIRED)
 endif()
+
+# General settings
+set(CPACK_PACKAGE_VENDOR "Skycoder42")
+set(CPACK_PACKAGE_CONTACT "Shatur")
+set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.md")
+# CPACK: DEB Specific Settings
+set(CPACK_DEBIAN_PACKAGE_NAME "libqhotkey")
+set(CPACK_DEBIAN_PACKAGE_SECTION "Libraries")
+# Set dependencies
+if(QT_DEFAULT_MAJOR_VERSION EQUAL 6)
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt6x11extras6 (>= 6.2.0)")
+else()
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt5x11extras5 (>= 5.15.2)")
+endif()
+include(CPack)
 
 add_library(qhotkey QHotkey/qhotkey.cpp)
 add_library(QHotkey::QHotkey ALIAS qhotkey)
