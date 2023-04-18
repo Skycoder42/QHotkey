@@ -63,12 +63,12 @@ bool QHotkeyPrivateWin::nativeEventFilter(const QByteArray &eventType, void *mes
 
 void QHotkeyPrivateWin::pollForHotkeyRelease()
 {
-	auto it = std::remove_if(this->polledShortcuts.begin(), this->polledShortcuts.end(),
-							 [this](const QHotkey::NativeShortcut &shortcut) {
-								 bool pressed = (GetAsyncKeyState(shortcut.key) & (1 << 15)) != 0;
-								 if (!pressed) this->releaseShortcut(shortcut);
-								 return !pressed;
-							 });
+	auto it = std::remove_if(this->polledShortcuts.begin(), this->polledShortcuts.end(), [this](const QHotkey::NativeShortcut &shortcut) {
+		bool pressed = (GetAsyncKeyState(shortcut.key) & (1 << 15)) != 0;
+		if (!pressed)
+			this->releaseShortcut(shortcut);
+		return !pressed;
+	});
 	this->polledShortcuts.erase(it, this->polledShortcuts.end());
 	if (this->polledShortcuts.empty())
 		this->pollTimer.stop();
