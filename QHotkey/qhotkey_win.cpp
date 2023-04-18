@@ -1,7 +1,9 @@
 #include "qhotkey.h"
 #include "qhotkey_p.h"
 #include <qt_windows.h>
+#include <algorithm>
 #include <QDebug>
+#include <QList>
 #include <QTimer>
 
 #define HKEY_ID(nativeShortcut) (((nativeShortcut.key ^ (nativeShortcut.modifier << 8)) & 0x0FFF) | 0x7000)
@@ -28,7 +30,7 @@ protected:
 private:
 	static QString formatWinError(DWORD winError);
 	QTimer pollTimer;
-	QHotkey::NativeShortcut polledShortcut;
+	QList<QHotkey::NativeShortcut> polledShortcuts;
 };
 NATIVE_INSTANCE(QHotkeyPrivateWin)
 
@@ -51,8 +53,9 @@ bool QHotkeyPrivateWin::nativeEventFilter(const QByteArray &eventType, void *mes
 	if(msg->message == WM_HOTKEY) {
 		QHotkey::NativeShortcut shortcut = {HIWORD(msg->lParam), LOWORD(msg->lParam)};
 		this->activateShortcut(shortcut);
-		this->polledShortcut = shortcut;
-		this->pollTimer.start();
+		bool shouldStart = this->polledShortcuts.empty();
+		this->polledShortcuts.push_front(shortcut);
+		if (shouldStart) this->pollTimer.start();
 	}
 
 	return false;
@@ -60,11 +63,14 @@ bool QHotkeyPrivateWin::nativeEventFilter(const QByteArray &eventType, void *mes
 
 void QHotkeyPrivateWin::pollForHotkeyRelease()
 {
-	bool pressed = (GetAsyncKeyState(this->polledShortcut.key) & (1 << 15)) != 0;
-	if(!pressed) {
-		this->pollTimer.stop();
-		this->releaseShortcut(this->polledShortcut);
-	}
+	auto predicate = [this](const QHotkey::NativeShortcut& shortcut) {
+		bool pressed = (GetAsyncKeyState(shortcut.key) & (1 << 15)) != 0;
+		if (!pressed) this->releaseShortcut(shortcut);
+		return !pressed;
+	};
+	auto it = std::remove_if(this->polledShortcuts.begin(), this->polledShortcuts.end(), predicate);
+	this->polledShortcuts.erase(it, this->polledShortcuts.end());
+	if (this->polledShortcuts.empty()) this->pollTimer.stop();
 }
 
 quint32 QHotkeyPrivateWin::nativeKeycode(Qt::Key keycode, bool &ok)
