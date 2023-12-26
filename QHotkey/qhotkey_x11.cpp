@@ -5,7 +5,7 @@
 	#include <QGuiApplication>
 #else
 	#include <QDebug>
-	#include <QX11Info>
+	#include <QtX11Extras/QX11Info>
 #endif
 
 #include <QThreadStorage>
