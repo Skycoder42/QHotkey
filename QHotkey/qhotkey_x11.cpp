@@ -138,11 +138,11 @@ quint32 QHotkeyPrivateX11::nativeKeycode(Qt::Key keycode, bool &ok)
 
 	if(x11Interface) {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 2, 0)
-        Display *display = x11Interface->display();
+		Display *display = x11Interface->display();
 #else
-        Display *display = QX11Info::display();
+		Display *display = QX11Info::display();
 #endif
-        auto res = XKeysymToKeycode(display, keysym);
+		auto res = XKeysymToKeycode(display, keysym);
 		if(res != 0)
 			ok = true;
 		return res;
