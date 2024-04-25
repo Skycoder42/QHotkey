@@ -14,7 +14,7 @@ jobs:
   build:
     strategy:
       matrix:
-        qt_version: [5.12.12, 5.15.13, 6.2.8]
+        qt_version: [5.12.12, 5.15.12, 6.2.8]
         platform: [ubuntu-20.04, windows-latest, macos-latest]
         include:
           - qt_version: 6.2.8
