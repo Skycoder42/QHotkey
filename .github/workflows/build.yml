@@ -61,7 +61,7 @@ jobs:
       - name: Build with QMake as static
         working-directory: HotkeyTest
         run: |
-          qmake -set arch x86_64
+          qmake
           ${{ matrix.make }}
 
       - name: Build with QMake as shared
