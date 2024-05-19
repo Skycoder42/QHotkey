@@ -61,11 +61,11 @@ jobs:
       - name: Build with QMake as static
         working-directory: HotkeyTest
         run: |
-          qmake -set arch x86_64
+          qmake "CONFIG+=x86_64"
           ${{ matrix.make }}
 
       - name: Build with QMake as shared
         working-directory: HotkeyTest
         run: |
-          qmake -set arch x86_64 "DEFINES+=QHOTKEY_SHARED QHOTKEY_LIBRARY"
+          qmake "CONFIG+=x86_64" "DEFINES+=QHOTKEY_SHARED QHOTKEY_LIBRARY"
           ${{ matrix.make }}
