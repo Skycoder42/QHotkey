@@ -16,7 +16,7 @@ The QHotkey is a class that can be used to create hotkeys/global shortcuts, aka 
 
 ## Building
 
-QHotkey supports both Qt6 and Qt5. When using Qt6, version 6.2.0 or later required. It can be built by either the CMake or qmake building systems.
+QHotkey supports both Qt6 and Qt5. When using Qt6, version 6.2.0 or later required. It can be built using the CMake building system.
 
 ### CMake
 
@@ -27,17 +27,6 @@ $ cd QHotkey
 $ cmake -B build -S . -DQT_DEFAULT_MAJOR_VERSION=6
 $ cmake --build build
 # cmake --install build
-```
-
-### qmake
-
-The major version of Qt is chosen by the qmake invocation itself, as the qmake executable is tied to a specific Qt version. The executable name can vary between operating systems. qmake example usage:
-
-```
-$ cd QHotkey
-$ qmake
-$ make
-# make install
 ```
 
 ## Installation
