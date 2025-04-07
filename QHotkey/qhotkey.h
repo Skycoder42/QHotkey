@@ -88,7 +88,7 @@ public:
 	//! Get the current native shortcut
 	NativeShortcut currentNativeShortcut() const;
 
-public slots:
+public Q_SLOTS:
 	//! @writeAcFn{QHotkey::registered}
 	bool setRegistered(bool registered);
 
@@ -102,7 +102,7 @@ public slots:
 	//! Set this hotkey to a native shortcut
 	bool setNativeShortcut(QHotkey::NativeShortcut nativeShortcut, bool autoRegister = false);
 
-signals:
+Q_SIGNALS:
 	//! Will be emitted if the shortcut is pressed
 	void activated(QPrivateSignal);
 

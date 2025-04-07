@@ -41,6 +41,8 @@ add_library(qhotkey QHotkey/qhotkey.cpp)
 add_library(QHotkey::QHotkey ALIAS qhotkey)
 target_link_libraries(qhotkey PUBLIC Qt${QT_DEFAULT_MAJOR_VERSION}::Core Qt${QT_DEFAULT_MAJOR_VERSION}::Gui)
 
+target_compile_definitions(qhotkey PRIVATE QT_NO_SIGNALS_SLOTS_KEYWORDS)
+
 if(BUILD_SHARED_LIBS)
     target_compile_definitions(qhotkey PRIVATE QHOTKEY_LIBRARY)
     target_compile_definitions(qhotkey PUBLIC QHOTKEY_SHARED)
