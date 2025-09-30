@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 	QApplication app(argc, argv);
 
 	QHotkey hotkey(QKeySequence("Ctrl+Alt+Q"), true, &app); //The hotkey will be automatically registered
-	qDebug() << "Is segistered:" << hotkey.isRegistered();
+	qDebug() << "Is registered:" << hotkey.isRegistered();
 
 	QObject::connect(&hotkey, &QHotkey::activated, qApp, [&](){
 		qDebug() << "Hotkey Activated - the application will quit now";
